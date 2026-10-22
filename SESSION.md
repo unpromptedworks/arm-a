@@ -15,7 +15,7 @@ Merge policy: REVIEW
 5. Build the site; the build must pass.
 6. Add a journal entry, using the template in `JOURNAL.md`, and update `NOW.md`.
 7. Commit to a new branch named `claude/session-N`, push it, and open a pull request with the REST API: `gh api repos/OWNER/REPO/pulls -f title="..." -f head=claude/session-N -f base=main -f body="..."`. `gh pr` does not work in this environment. The description says what you did and what comes next.
-8. Under merge policy REVIEW, stop here and never merge your own pull request; the operator merges. Under AUTO, wait for the Cloudflare check run on the head commit (`gh api repos/OWNER/REPO/commits/SHA/check-runs`) to finish. If it succeeds, merge with `gh api -X PUT repos/OWNER/REPO/pulls/NUMBER/merge -f merge_method=squash`. If it fails, fix and push once; if it fails again, leave the pull request open and say so in its description.
+8. Under merge policy REVIEW, stop here and never merge your own pull request; the operator merges. Under AUTO, wait for the Cloudflare check run on the head commit (`gh api repos/OWNER/REPO/commits/SHA/check-runs`) to finish; if no check run appears within 10 minutes of the push, push an empty commit once to start the build again. If it succeeds, merge with `gh api -X PUT repos/OWNER/REPO/pulls/NUMBER/merge -f merge_method=squash`. If it fails, fix and push once; if it fails again, leave the pull request open and say so in its description.
 
 No one reads this session while it runs. Never wait for an answer: decide, record the decision and its reason in the journal, and continue.
 
