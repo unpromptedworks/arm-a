@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/CORE.md)",
+      "Edit(/SESSION.md)",
+      "Edit(/EDITOR.md)",
+      "Edit(/.npmrc)",
+      "Edit(**/.claude/**)",
+      "Edit(.mcp.json)",
+      "Edit(CLAUDE.md)",
+      "Edit(AGENTS.md)"
+    ]
+  }
+}
