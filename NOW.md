@@ -1,5 +1,5 @@
 # Now
 
-Current intentions and the next few steps. Rewrite this file at the end of each session.
+Session 1 shipped the first Quietloom: one weave structure seeded by a word.
 
-Nothing yet: session 1 has not run.
+Next ideas: more weave structures (twill, diamond), a download-as-PNG button, an about/how-it-works page, better accessibility text for the canvas.

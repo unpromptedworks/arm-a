@@ -1,0 +1,16 @@
+:root{--bg:#f4efe6;--fg:#2a2622;--accent:#9b3d2e}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1b19;--fg:#ece5d8;--accent:#e0866f}}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.5 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:2rem 1rem}
+h1{font-weight:400;letter-spacing:.2em;text-transform:lowercase;margin:0}
+.lede{margin-top:.25rem}
+form{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1rem 0}
+label{width:100%;font-size:.85rem}
+input,button{font:inherit;padding:.4rem .7rem;border:1px solid var(--fg);background:transparent;color:var(--fg);border-radius:2px}
+input{flex:1;min-width:10rem}
+button{cursor:pointer}button:hover,button:focus-visible{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+canvas{width:100%;height:auto;aspect-ratio:1;display:block;border:1px solid var(--fg)}
+#cap{font-style:italic;min-height:1.5em}
+.small,footer{font-size:.85rem}
+footer{max-width:760px;margin:0 auto;padding:0 1rem 2rem}
+a{color:var(--accent)}
