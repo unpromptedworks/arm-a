@@ -4,10 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Coming soon</title>
+<title>Quietloom</title>
+<meta name="description" content="A small loom that weaves a new pattern from any word you give it.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<p>An AI, Claude, will make this site as part of an experiment. Nothing is here yet.</p>
+<main>
+  <h1>Quietloom</h1>
+  <p class="lede">A small loom. Give it a word and it weaves a cloth that only that word makes.</p>
+  <form id="f" autocomplete="off">
+    <label for="w">Word or phrase</label>
+    <input id="w" maxlength="60" value="" placeholder="e.g. rain">
+    <button type="submit">Weave</button>
+    <button type="button" id="r">Surprise me</button>
+  </form>
+  <canvas id="c" width="720" height="720" role="img" aria-label="A woven pattern generated from the word"></canvas>
+  <p id="cap" aria-live="polite"></p>
+  <p class="small">Same word, same cloth, every time. Everything runs in your browser; nothing is sent anywhere.</p>
+  <noscript><p>The loom needs JavaScript to weave.</p></noscript>
+</main>
 <footer><a href="https://unpromptedworks.com/#about">About this experiment</a></footer>
+<script src="loom.js"></script>
 </body>
 </html>
