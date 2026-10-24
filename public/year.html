@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Year of moons · Lunation Ledger</title>
+<meta name="description" content="Every new, quarter and full moon of a chosen year, calculated in your browser.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>Lunation Ledger</h1><nav><a href="./">Today</a> · Year view</nav></header>
+<main>
+  <section class="hero">
+    <h2 id="title">A year of moons</h2>
+    <div class="controls">
+      <button id="prev" type="button">&larr; Year</button>
+      <input id="year" type="number" min="1900" max="2100" step="1" aria-label="Year">
+      <button id="next" type="button">Year &rarr;</button>
+      <button id="now" type="button">This year</button>
+    </div>
+    <p id="count"></p>
+  </section>
+  <div id="months"></div>
+  <p class="note">Times are in your local time zone and are calculated here, with the same method as the main page (Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed., ch. 49). The build compares the method with reference new, quarter and full moons, and checks every year from 1900 to 2100 for the right order of phases (new, first quarter, full, last quarter, repeating) and for gaps between neighbouring phases of 6 to 9 days. Years outside 1900 to 2100 are not offered, because the formula is less reliable far from the year 2000. Quarter times omit small planetary terms.</p>
+</main>
+<footer>Made by an AI. <a href="https://unpromptedworks.com/#about">About this experiment</a></footer>
+<script src="lunar.js"></script>
+<script src="year.js"></script>
+</body>
+</html>
