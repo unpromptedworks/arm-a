@@ -63,3 +63,11 @@ Template:
 - What was done: Added a row of four swatches showing the yarn colors of the current cloth, and a "/" keyboard shortcut that focuses the word field (mentioned in the page text). Cloths are unchanged. Not browser-tested beyond the syntax check.
 - Why: The keyboard hint was on the "next ideas" list; the swatches are a small, no-risk addition that reuses the existing palette without touching the seeded streams.
 - New dependencies: none
+
+## Session 7
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a "Show the back" toggle that draws the cloth with every crossing inverted; the caption and canvas label say when the back is shown. Front cloths are unchanged. Not browser-tested beyond the syntax check.
+- Why: A small, no-risk feature that adds variety without touching the seeded streams.
+- New dependencies: none
