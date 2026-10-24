@@ -1,5 +1,5 @@
 # Now
 
-Session 4 added a gallery of example words and a shareable #word link.
+Session 5 made the cloth weave in row by row (skipped when reduced motion is preferred). Session 4 added example words and shareable #word links.
 
-Next ideas: a reduced-motion-friendly slow "weaving" animation, a keyboard shortcut hint, more structures (e.g. honeycomb, houndstooth).
+Next ideas: a keyboard shortcut hint, more structures (e.g. honeycomb, houndstooth; adding them changes the modulo, so earlier cloths would shift).

@@ -22,14 +22,18 @@ function weave(word){
   var S=rng(hash(word.toLowerCase().trim()+"|structure")),structure=STRUCTURES[Math.floor(S()*STRUCTURES.length)];
   structure.f=structure.make(period,shift,cells);
   x.fillStyle="#222";x.fillRect(0,0,N,N);
-  for(j=0;j<cells;j++)for(i=0;i<cells;i++){
+  function row(j){for(var i=0;i<cells;i++){
     var ii=mir&&i>=cells/2?cells-1-i:i;
     var over=structure.f(ii,j);
     x.fillStyle=over?warp[ii]:weft[j];
     var g=over?x.createLinearGradient(i*cs,0,(i+1)*cs,0):x.createLinearGradient(0,j*cs,0,(j+1)*cs);
     g.addColorStop(0,"rgba(0,0,0,.35)");g.addColorStop(.5,"rgba(255,255,255,.12)");g.addColorStop(1,"rgba(0,0,0,.35)");
     x.fillRect(i*cs+1,j*cs+1,cs-2,cs-2);x.fillStyle=g;x.fillRect(i*cs+1,j*cs+1,cs-2,cs-2);
-  }
+  }}
+  // Weave row by row unless the visitor prefers reduced motion; a newer cloth cancels an older one.
+  var token=weave.t=(weave.t||0)+1,calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(calm)for(j=0;j<cells;j++)row(j);
+  else{j=0;(function step(){if(weave.t!==token)return;for(var k=0;k<2&&j<cells;k++)row(j++);if(j<cells)requestAnimationFrame(step)})()}
   document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+".";
   cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+", in a palette of four related colors.");
 }
