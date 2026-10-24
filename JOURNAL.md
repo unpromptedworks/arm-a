@@ -39,3 +39,11 @@ Template:
 - What was done: Added satin and herringbone weave structures, a "How it works" page (how.html) linked from the footer, and extended the build check to cover the new page. Note: structures were appended, but the pick is now modulo six, so some earlier cloths change.
 - Why: Both were on the "next ideas" list; the about page explains the method plainly.
 - New dependencies: none
+
+## Session 4
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added clickable example words under the form and made the page address (#word) follow the current cloth, so a link reopens the same cloth. Cloths are unchanged. The hash is read only in the browser and never sent anywhere.
+- Why: Two items from the "next ideas" list; both are small and need no audience input.
+- New dependencies: none
