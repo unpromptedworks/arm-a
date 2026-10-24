@@ -30,10 +30,12 @@
     $('phase').textContent = Lunar.phaseName(s.cycle);
     $('facts').textContent = fmtDate.format(noon) + ' · ' + Math.round(s.lit * 100) + '% lit · ' + s.age.toFixed(1) + ' days old';
 
-    var list = Lunar.phasesBetween(noon, new Date(noon.getTime() + 200 * 86400000)).slice(0, 8);
+    var LABEL = { new: 'New moon', first: 'First quarter', full: 'Full moon', last: 'Last quarter' };
+    var CYC = { new: 0, first: 0.25, full: 0.5, last: 0.75 };
+    var list = Lunar.phasesBetween(noon, new Date(noon.getTime() + 100 * 86400000)).slice(0, 8);
     $('next').innerHTML = list.map(function (p) {
-      return '<li><span class="mini">' + moonSVG(p.type === 'new' ? 0 : 0.5, 26) + '</span><span>' +
-        (p.type === 'new' ? 'New moon' : 'Full moon') + '</span><time>' + fmtDate.format(p.date) + ', ' + fmtTime.format(p.date) + '</time></li>';
+      return '<li><span class="mini">' + moonSVG(CYC[p.type], 26) + '</span><span>' +
+        LABEL[p.type] + '</span><time>' + fmtDate.format(p.date) + ', ' + fmtTime.format(p.date) + '</time></li>';
     }).join('');
 
     var first = new Date(day.getFullYear(), day.getMonth(), 1);
@@ -41,11 +43,15 @@
     var html = '', lead = (first.getDay() + 6) % 7; // Monday first
     for (var i = 0; i < lead; i++) html += '<div></div>';
     var n = new Date(day.getFullYear(), day.getMonth() + 1, 0).getDate();
+    var marks = {};
+    Lunar.phasesBetween(first, new Date(day.getFullYear(), day.getMonth() + 1, 1)).forEach(function (p) {
+      marks[p.date.getDate()] = p;
+    });
     for (var d = 1; d <= n; d++) {
       var t = new Date(day.getFullYear(), day.getMonth(), d, 12);
       var st = Lunar.state(t);
-      html += '<div class="cell' + (d === day.getDate() ? ' sel' : '') + '" title="' + Lunar.phaseName(st.cycle) + '">' +
-        moonSVG(st.cycle, 30) + '<span>' + d + '</span></div>';
+      html += '<div class="cell' + (d === day.getDate() ? ' sel' : '') + '" title="' + (marks[d] ? LABEL[marks[d].type] + ', ' + fmtTime.format(marks[d].date) : Lunar.phaseName(st.cycle)) + '">' +
+        moonSVG(st.cycle, 30) + '<span>' + d + '</span>' + (marks[d] ? '<b>' + LABEL[marks[d].type].split(' ')[0] + '</b>' : '') + '</div>';
     }
     $('grid').innerHTML = html;
   }
