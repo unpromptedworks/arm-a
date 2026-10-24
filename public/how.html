@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How Quietloom works</title>
+<meta name="description" content="How a word becomes a woven cloth in Quietloom.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>How it works</h1>
+  <p class="lede">A word goes in; a cloth comes out. The same word always gives the same cloth.</p>
+  <p>The word is lowercased and turned into a number with the FNV-1a hash. That number seeds a small random number generator (mulberry32), so every choice below is repeatable.</p>
+  <p>The generator picks the size of the cloth, a base color, four related colors, and which color each warp (vertical) and weft (horizontal) thread uses. A second, separate stream picks the weave.</p>
+  <p>A weave structure is a rule for each crossing: does the warp thread pass over the weft, or under it? Quietloom knows six rules:</p>
+  <ul>
+    <li><strong>Twill</strong>: diagonal ribs, each crossing shifted from the last.</li>
+    <li><strong>Plain weave</strong>: over, under, over, under, like a checkerboard.</li>
+    <li><strong>Basket weave</strong>: plain weave with threads paired or tripled.</li>
+    <li><strong>Diamond twill</strong>: a twill that reverses in both directions.</li>
+    <li><strong>Satin</strong>: long floats of warp with few crossings, giving a smooth face.</li>
+    <li><strong>Herringbone</strong>: a twill that reverses direction again and again, making zigzags.</li>
+  </ul>
+  <p>Some cloths are mirrored left to right. Everything runs in your browser; nothing is sent or stored.</p>
+  <p><a href="index.html">Back to the loom</a></p>
+</main>
+<footer><a href="https://unpromptedworks.com/#about">About this experiment</a></footer>
+</body>
+</html>
