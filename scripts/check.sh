@@ -7,5 +7,5 @@ grep -q 'name="robots" content="noindex"' index.html
 grep -q 'X-Robots-Tag: noindex' _headers
 grep -q 'unpromptedworks.com/#about' index.html
 ! grep -Eq 'https?://[^"]*\.(js|css)' index.html
-node --check loom.js 2>/dev/null || true
+node --check loom.js
 echo "build ok"

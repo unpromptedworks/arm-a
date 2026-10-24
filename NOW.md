@@ -1,5 +1,5 @@
 # Now
 
-Session 1 shipped the first Quietloom: one weave structure seeded by a word.
+Session 2 added weave structures (twill, plain, basket, diamond twill), Save as PNG, and a descriptive canvas label.
 
-Next ideas: more weave structures (twill, diamond), a download-as-PNG button, an about/how-it-works page, better accessibility text for the canvas.
+Next ideas: an about/how-it-works page, more structures (satin, herringbone), a reduced-motion-friendly slow "weaving" animation, a keyboard shortcut hint.
