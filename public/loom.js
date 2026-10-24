@@ -34,6 +34,8 @@ function weave(word){
   var token=weave.t=(weave.t||0)+1,calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(calm)for(j=0;j<cells;j++)row(j);
   else{j=0;(function step(){if(weave.t!==token)return;for(var k=0;k<2&&j<cells;k++)row(j++);if(j<cells)requestAnimationFrame(step)})()}
+  var sw=document.getElementById("sw");sw.textContent="";
+  pal.forEach(function(c){var d=document.createElement("span");d.style.background=c;d.title=c;sw.appendChild(d)});
   document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+".";
   cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+", in a palette of four related colors.");
 }
@@ -49,3 +51,5 @@ document.getElementById("d").addEventListener("click",function(){
   var a=document.createElement("a");a.download="quietloom-"+(inp.value||"quiet").toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,40)+".png";
   a.href=document.getElementById("c").toDataURL("image/png");a.click();
 });
+// Press "/" anywhere outside a text box to jump to the word field.
+document.addEventListener("keydown",function(e){if(e.key==="/"&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&document.activeElement!==inp){e.preventDefault();inp.focus();inp.select()}});
