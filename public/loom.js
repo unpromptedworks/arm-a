@@ -57,3 +57,9 @@ document.addEventListener("keydown",function(e){if(e.key==="/"&&!e.ctrlKey&&!e.m
 // The back of a cloth shows every crossing the other way round.
 var bk=document.getElementById("b");
 bk.addEventListener("click",function(){back=!back;bk.textContent=back?"Show the front":"Show the back";bk.setAttribute("aria-pressed",back);weave(inp.value||"quiet")});
+// Copy the address of the current cloth; the clipboard is written only when the visitor clicks.
+var lk=document.getElementById("l");
+lk.addEventListener("click",function(){
+  var done=function(t){lk.textContent=t;setTimeout(function(){lk.textContent="Copy link"},1600)};
+  try{navigator.clipboard.writeText(location.href).then(function(){done("Copied")},function(){done("Copy failed")})}catch(e){done("Copy failed")}
+});
