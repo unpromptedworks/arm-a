@@ -4,6 +4,7 @@
 {
   "name": "arm-a",
   "compatibility_date": "2026-09-01",
+  "build": { "command": "node src/check.js" },
   "assets": {
     "directory": "./public"
   },
