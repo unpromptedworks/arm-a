@@ -87,3 +87,11 @@ Template:
 - What was done: Added a "Replay" button that weaves the current cloth again from the first row (instant under reduced motion). Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-d8bfnj, the branch this session was assigned, rather than claude/session-9.
 - Why: The row-by-row weave from session 5 is easy to miss; a replay button lets visitors watch it again. Small and no-risk.
 - New dependencies: none
+
+## Session 10
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a "Look closer" toggle that magnifies the middle of the cloth 2.5 times (CSS only, canvas wrapped in a clipping frame; no transition under reduced motion). Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-0468kz, the branch this session was assigned, rather than claude/session-10.
+- Why: Single crossings are small on a phone screen; a magnifier is small and no-risk.
+- New dependencies: none

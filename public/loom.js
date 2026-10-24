@@ -65,3 +65,6 @@ lk.addEventListener("click",function(){
 });
 // Replay the weave of the current cloth from the first row.
 document.getElementById("p").addEventListener("click",function(){weave(inp.value||"quiet")});
+// Look closer magnifies the middle of the cloth so single crossings are easy to see.
+var zb=document.getElementById("z");
+zb.addEventListener("click",function(){var on=document.getElementById("frame").classList.toggle("close");zb.textContent=on?"Step back":"Look closer";zb.setAttribute("aria-pressed",on)});
