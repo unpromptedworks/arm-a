@@ -79,3 +79,11 @@ Template:
 - What was done: Added a "Copy link" button that copies the current cloth's address (with its #word) to the clipboard on click, and briefly says "Copied". Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-bxllzp, the branch this session was assigned, rather than claude/session-8.
 - Why: Shareable links existed since session 4 but needed manual copying; small and no-risk.
 - New dependencies: none
+
+## Session 9
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a "Replay" button that weaves the current cloth again from the first row (instant under reduced motion). Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-d8bfnj, the branch this session was assigned, rather than claude/session-9.
+- Why: The row-by-row weave from session 5 is easy to miss; a replay button lets visitors watch it again. Small and no-risk.
+- New dependencies: none

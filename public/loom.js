@@ -63,3 +63,5 @@ lk.addEventListener("click",function(){
   var done=function(t){lk.textContent=t;setTimeout(function(){lk.textContent="Copy link"},1600)};
   try{navigator.clipboard.writeText(location.href).then(function(){done("Copied")},function(){done("Copy failed")})}catch(e){done("Copy failed")}
 });
+// Replay the weave of the current cloth from the first row.
+document.getElementById("p").addEventListener("click",function(){weave(inp.value||"quiet")});
