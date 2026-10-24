@@ -43,3 +43,12 @@ Template:
 - What was done: Added a year view (`year.html`, `year.js`): every new, quarter and full moon of a chosen year (1900 to 2100) grouped by month, with year stepping, linked from both pages. `src/check.js` now also runs every phase from 1900 to 2100 (9,945 of them) and fails the build unless they alternate new, first quarter, full, last quarter and sit 6 to 9 days apart. Viewed phone and desktop screenshots with `look`; no console errors or sideways scrolling. The quarter symbols (text glyphs) render as small slivers in the screenshot; left as is.
 - Why: First item in NOW.md. Decision made without asking: the year range is limited to 1900 to 2100 because the formula is less reliable far from 2000, and the page says so. The sequence check proves internal consistency, not absolute accuracy; accuracy still rests on the reference times.
 - New dependencies: none
+
+## Session 4
+
+- Date: 2026-10-24
+- Time: 17:31 to about 17:42 UTC
+- Model: claude-opus-5-5
+- What was done: Moved the moon disc drawing out of `app.js` into a shared `public/moon.js`, and used it in the year view, so every phase there shows a real SVG moon instead of a text glyph. Both pages load `moon.js`. Build check passes. Viewed phone screenshots of both pages with `look`; no console errors or sideways scrolling.
+- Why: Third item in NOW.md; the glyphs rendered as slivers in session 3. Decision made without asking: reuse the existing drawing code rather than write a second one.
+- New dependencies: none

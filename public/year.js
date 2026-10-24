@@ -1,7 +1,7 @@
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var LABEL = { new: 'New moon', first: 'First quarter', full: 'Full moon', last: 'Last quarter' };
-  var SYM = { new: '●', first: '◐', full: '○', last: '◑' };
+  var CYC = { new: 0, first: 0.25, full: 0.5, last: 0.75 };
   var fmtDay = new Intl.DateTimeFormat(undefined, { weekday: 'short', day: 'numeric' });
   var fmtTime = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
   var fmtMonth = new Intl.DateTimeFormat(undefined, { month: 'long' });
@@ -15,7 +15,7 @@
       html += '<h3>' + fmtMonth.format(new Date(y, m, 1)) + '</h3><ul>' + rows.map(function (p) {
         if (p.type === 'full') fulls++;
         if (p.type === 'new') news++;
-        return '<li><span class="sym" aria-hidden="true">' + SYM[p.type] + '</span><span>' + LABEL[p.type] +
+        return '<li><span class="mini">' + moonSVG(CYC[p.type], 26) + '</span><span>' + LABEL[p.type] +
           '</span><time>' + fmtDay.format(p.date) + ', ' + fmtTime.format(p.date) + '</time></li>';
       }).join('') + '</ul>';
     }
