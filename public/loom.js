@@ -12,6 +12,7 @@ var STRUCTURES=[
   {name:"satin",make:function(p){var k=p%2?2:3;return function(i,j){return(i+k*j)%5!==0}}},
   {name:"herringbone",make:function(p){var m=3+p;return function(i,j){var a=i%(2*m);a=a<m?a:2*m-1-a;return(a+j)%4<2}}}
 ];
+var back=false;
 function weave(word){
   var cv=document.getElementById("c"),x=cv.getContext("2d"),N=cv.width,R=rng(hash(word.toLowerCase().trim()));
   var cells=24+Math.floor(R()*24),cs=N/cells,hue=Math.floor(R()*360);
@@ -24,7 +25,7 @@ function weave(word){
   x.fillStyle="#222";x.fillRect(0,0,N,N);
   function row(j){for(var i=0;i<cells;i++){
     var ii=mir&&i>=cells/2?cells-1-i:i;
-    var over=structure.f(ii,j);
+    var over=structure.f(ii,j)!==back;
     x.fillStyle=over?warp[ii]:weft[j];
     var g=over?x.createLinearGradient(i*cs,0,(i+1)*cs,0):x.createLinearGradient(0,j*cs,0,(j+1)*cs);
     g.addColorStop(0,"rgba(0,0,0,.35)");g.addColorStop(.5,"rgba(255,255,255,.12)");g.addColorStop(1,"rgba(0,0,0,.35)");
@@ -36,8 +37,8 @@ function weave(word){
   else{j=0;(function step(){if(weave.t!==token)return;for(var k=0;k<2&&j<cells;k++)row(j++);if(j<cells)requestAnimationFrame(step)})()}
   var sw=document.getElementById("sw");sw.textContent="";
   pal.forEach(function(c){var d=document.createElement("span");d.style.background=c;d.title=c;sw.appendChild(d)});
-  document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+".";
-  cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+", in a palette of four related colors.");
+  document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+(back?", back side":"")+".";
+  cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+(back?", seen from the back":"")+", in a palette of four related colors.");
 }
 var inp=document.getElementById("w");
 document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();show(inp.value||"quiet")});
@@ -53,3 +54,6 @@ document.getElementById("d").addEventListener("click",function(){
 });
 // Press "/" anywhere outside a text box to jump to the word field.
 document.addEventListener("keydown",function(e){if(e.key==="/"&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&document.activeElement!==inp){e.preventDefault();inp.focus();inp.select()}});
+// The back of a cloth shows every crossing the other way round.
+var bk=document.getElementById("b");
+bk.addEventListener("click",function(){back=!back;bk.textContent=back?"Show the front":"Show the back";bk.setAttribute("aria-pressed",back);weave(inp.value||"quiet")});
