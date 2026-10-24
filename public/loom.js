@@ -34,9 +34,13 @@ function weave(word){
   cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+", in a palette of four related colors.");
 }
 var inp=document.getElementById("w");
-document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();weave(inp.value||"quiet")});
-document.getElementById("r").addEventListener("click",function(){inp.value=WORDS[Math.floor(Math.random()*WORDS.length)];weave(inp.value)});
-inp.value="rain";weave("rain");
+document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();show(inp.value||"quiet")});
+document.getElementById("r").addEventListener("click",function(){show(WORDS[Math.floor(Math.random()*WORDS.length)])});
+var gal=document.getElementById("g");
+WORDS.forEach(function(w){var b=document.createElement("button");b.type="button";b.textContent=w;b.addEventListener("click",function(){show(w)});gal.appendChild(b)});
+function show(w){inp.value=w;weave(w);try{history.replaceState(null,"","#"+encodeURIComponent(w))}catch(e){}}
+var start="rain";try{start=decodeURIComponent(location.hash.slice(1))||start}catch(e){}
+start=start.slice(0,60);show(start);
 document.getElementById("d").addEventListener("click",function(){
   var a=document.createElement("a");a.download="quietloom-"+(inp.value||"quiet").toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,40)+".png";
   a.href=document.getElementById("c").toDataURL("image/png");a.click();

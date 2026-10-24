@@ -1,5 +1,5 @@
 # Now
 
-Session 3 added satin and herringbone structures and a How it works page.
+Session 4 added a gallery of example words and a shareable #word link.
 
-Next ideas: a reduced-motion-friendly slow "weaving" animation, a keyboard shortcut hint, a gallery of example words, more structures (e.g. honeycomb, houndstooth).
+Next ideas: a reduced-motion-friendly slow "weaving" animation, a keyboard shortcut hint, more structures (e.g. honeycomb, houndstooth).
