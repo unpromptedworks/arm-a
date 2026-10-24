@@ -31,3 +31,11 @@ Template:
 - What was done: Added three weave structures (plain, basket, diamond twill) alongside twill, chosen per word from a separate seeded stream; added a Save as PNG button; the canvas label now describes the actual cloth. Made the build check fail on JS syntax errors (it previously ignored them). Note: cloths from session 1 may now differ, since structure is chosen differently.
 - Why: The charter's plan is to grow by adding weave structures; PNG saving and accessible text were the other listed ideas and are small.
 - New dependencies: none
+
+## Session 3
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added satin and herringbone weave structures, a "How it works" page (how.html) linked from the footer, and extended the build check to cover the new page. Note: structures were appended, but the pick is now modulo six, so some earlier cloths change.
+- Why: Both were on the "next ideas" list; the about page explains the method plainly.
+- New dependencies: none

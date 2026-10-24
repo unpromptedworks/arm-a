@@ -8,7 +8,9 @@ var STRUCTURES=[
   {name:"twill",make:function(p,s){return function(i,j){return((i+j*s)%p)<p/2}}},
   {name:"plain weave",make:function(){return function(i,j){return(i+j)%2===0}}},
   {name:"basket weave",make:function(p){var b=2+p%2;return function(i,j){return(Math.floor(i/b)+Math.floor(j/b))%2===0}}},
-  {name:"diamond twill",make:function(p){var m=p+2;return function(i,j){var a=i%(2*m),b=j%(2*m);a=a<m?a:2*m-1-a;b=b<m?b:2*m-1-b;return(a+b)%3===0}}}
+  {name:"diamond twill",make:function(p){var m=p+2;return function(i,j){var a=i%(2*m),b=j%(2*m);a=a<m?a:2*m-1-a;b=b<m?b:2*m-1-b;return(a+b)%3===0}}},
+  {name:"satin",make:function(p){var k=p%2?2:3;return function(i,j){return(i+k*j)%5!==0}}},
+  {name:"herringbone",make:function(p){var m=3+p;return function(i,j){var a=i%(2*m);a=a<m?a:2*m-1-a;return(a+j)%4<2}}}
 ];
 function weave(word){
   var cv=document.getElementById("c"),x=cv.getContext("2d"),N=cv.width,R=rng(hash(word.toLowerCase().trim()));
