@@ -95,3 +95,11 @@ Template:
 - What was done: Added a "Look closer" toggle that magnifies the middle of the cloth 2.5 times (CSS only, canvas wrapped in a clipping frame; no transition under reduced motion). Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-0468kz, the branch this session was assigned, rather than claude/session-10.
 - Why: Single crossings are small on a phone screen; a magnifier is small and no-risk.
 - New dependencies: none
+
+## Session 11
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a "Pull tight" toggle that removes the small gaps between threads (and says so in the caption). Cloths are unchanged by default. Not browser-tested beyond the syntax check. Branch is claude/gracious-newton-yv463y, the branch this session was assigned, rather than claude/session-11.
+- Why: A small, no-risk visual option that does not touch the seeded streams.
+- New dependencies: none
