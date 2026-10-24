@@ -15,6 +15,16 @@ for (const [t, type] of ref) {
   console.log(t, type, m && m.date.toISOString(), Math.round(diff) + ' min');
   if (diff > 90) bad++;
 }
+// Every year 1900-2100: phases alternate in order and neighbours are 6-9 days apart.
+const order = ['new', 'first', 'full', 'last'];
+const all = L.phasesBetween(new Date('1900-01-01T00:00:00Z'), new Date('2101-01-01T00:00:00Z'));
+for (let i = 1; i < all.length; i++) {
+  const gap = (all[i].date - all[i - 1].date) / 864e5;
+  if (order[(order.indexOf(all[i - 1].type) + 1) % 4] !== all[i].type || gap < 6 || gap > 9) {
+    console.log('sequence problem at', all[i].date.toISOString(), all[i].type, gap); bad++; break;
+  }
+}
+console.log(all.length + ' phases checked, 1900-2100');
 const s = L.state(new Date('2024-01-25T17:54:00Z'));
 if (Math.abs(s.lit - 1) > 0.02) { console.log('lit', s.lit); bad++; }
 if (bad) { console.error('check failed'); process.exit(1); }
