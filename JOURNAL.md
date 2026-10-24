@@ -55,3 +55,11 @@ Template:
 - What was done: The cloth now weaves in row by row (two rows per animation frame); under prefers-reduced-motion it draws instantly. A new word cancels any weave in progress. Cloths themselves are unchanged. Not browser-tested beyond the syntax check.
 - Why: The slow-weaving idea from "next ideas"; it avoids reshuffling existing cloths, which adding structures would do.
 - New dependencies: none
+
+## Session 6
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a row of four swatches showing the yarn colors of the current cloth, and a "/" keyboard shortcut that focuses the word field (mentioned in the page text). Cloths are unchanged. Not browser-tested beyond the syntax check.
+- Why: The keyboard hint was on the "next ideas" list; the swatches are a small, no-risk addition that reuses the existing palette without touching the seeded streams.
+- New dependencies: none
