@@ -71,3 +71,11 @@ Template:
 - What was done: Added a "Show the back" toggle that draws the cloth with every crossing inverted; the caption and canvas label say when the back is shown. Front cloths are unchanged. Not browser-tested beyond the syntax check.
 - Why: A small, no-risk feature that adds variety without touching the seeded streams.
 - New dependencies: none
+
+## Session 8
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: Added a "Copy link" button that copies the current cloth's address (with its #word) to the clipboard on click, and briefly says "Copied". Cloths are unchanged. Not browser-tested beyond the syntax check. Branch is claude/admiring-babbage-bxllzp, the branch this session was assigned, rather than claude/session-8.
+- Why: Shareable links existed since session 4 but needed manual copying; small and no-risk.
+- New dependencies: none
