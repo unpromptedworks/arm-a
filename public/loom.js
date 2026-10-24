@@ -12,7 +12,7 @@ var STRUCTURES=[
   {name:"satin",make:function(p){var k=p%2?2:3;return function(i,j){return(i+k*j)%5!==0}}},
   {name:"herringbone",make:function(p){var m=3+p;return function(i,j){var a=i%(2*m);a=a<m?a:2*m-1-a;return(a+j)%4<2}}}
 ];
-var back=false;
+var back=false,tight=false;
 function weave(word){
   var cv=document.getElementById("c"),x=cv.getContext("2d"),N=cv.width,R=rng(hash(word.toLowerCase().trim()));
   var cells=24+Math.floor(R()*24),cs=N/cells,hue=Math.floor(R()*360);
@@ -29,7 +29,7 @@ function weave(word){
     x.fillStyle=over?warp[ii]:weft[j];
     var g=over?x.createLinearGradient(i*cs,0,(i+1)*cs,0):x.createLinearGradient(0,j*cs,0,(j+1)*cs);
     g.addColorStop(0,"rgba(0,0,0,.35)");g.addColorStop(.5,"rgba(255,255,255,.12)");g.addColorStop(1,"rgba(0,0,0,.35)");
-    x.fillRect(i*cs+1,j*cs+1,cs-2,cs-2);x.fillStyle=g;x.fillRect(i*cs+1,j*cs+1,cs-2,cs-2);
+    var o=tight?0:1;x.fillRect(i*cs+o,j*cs+o,cs-2*o,cs-2*o);x.fillStyle=g;x.fillRect(i*cs+o,j*cs+o,cs-2*o,cs-2*o);
   }}
   // Weave row by row unless the visitor prefers reduced motion; a newer cloth cancels an older one.
   var token=weave.t=(weave.t||0)+1,calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -37,7 +37,7 @@ function weave(word){
   else{j=0;(function step(){if(weave.t!==token)return;for(var k=0;k<2&&j<cells;k++)row(j++);if(j<cells)requestAnimationFrame(step)})()}
   var sw=document.getElementById("sw");sw.textContent="";
   pal.forEach(function(c){var d=document.createElement("span");d.style.background=c;d.title=c;sw.appendChild(d)});
-  document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+(back?", back side":"")+".";
+  document.getElementById("cap").textContent="“"+word+"”: "+cells+" threads, "+structure.name+(mir?", mirrored":"")+(back?", back side":"")+(tight?", pulled tight":"")+".";
   cv.setAttribute("aria-label","Woven cloth for “"+word+"”: "+cells+" by "+cells+" threads in "+structure.name+(mir?", mirrored left to right":"")+(back?", seen from the back":"")+", in a palette of four related colors.");
 }
 var inp=document.getElementById("w");
@@ -68,3 +68,6 @@ document.getElementById("p").addEventListener("click",function(){weave(inp.value
 // Look closer magnifies the middle of the cloth so single crossings are easy to see.
 var zb=document.getElementById("z");
 zb.addEventListener("click",function(){var on=document.getElementById("frame").classList.toggle("close");zb.textContent=on?"Step back":"Look closer";zb.setAttribute("aria-pressed",on)});
+// Pull tight closes the small gaps between threads.
+var tb=document.getElementById("t");
+tb.addEventListener("click",function(){tight=!tight;tb.textContent=tight?"Loosen":"Pull tight";tb.setAttribute("aria-pressed",tight);weave(inp.value||"quiet")});
