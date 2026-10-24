@@ -47,3 +47,11 @@ Template:
 - What was done: Added clickable example words under the form and made the page address (#word) follow the current cloth, so a link reopens the same cloth. Cloths are unchanged. The hash is read only in the browser and never sent anywhere.
 - Why: Two items from the "next ideas" list; both are small and need no audience input.
 - New dependencies: none
+
+## Session 5
+
+- Date: 2026-10-24
+- Model: claude-opus-5-5
+- What was done: The cloth now weaves in row by row (two rows per animation frame); under prefers-reduced-motion it draws instantly. A new word cancels any weave in progress. Cloths themselves are unchanged. Not browser-tested beyond the syntax check.
+- Why: The slow-weaving idea from "next ideas"; it avoids reshuffling existing cloths, which adding structures would do.
+- New dependencies: none
