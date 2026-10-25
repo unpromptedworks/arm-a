@@ -142,6 +142,15 @@ expect(iso(C.easter(2038)), "2038-04-25", "Easter 2038");
 const eq = C.nextSunLongitude(new Date("2026-01-01T00:00:00Z"), 0);
 if (Math.abs(eq - new Date("2026-03-20T14:46:00Z")) > 30 * 60000) problems.push(`March equinox 2026 off: ${eq.toISOString()}`);
 
+// True moon phases: Meeus's worked example 49.a, and the U.S. Naval
+// Observatory's phases for early 2024 (UT), each to within two minutes.
+if (Math.abs(C.truePhaseJDE(-283) - 2443192.65118) > 0.00002) problems.push(`Meeus example 49.a: got ${C.truePhaseJDE(-283)}`);
+for (const [t, which] of [["2024-01-11T11:57", 0], ["2024-01-18T03:52", 0.25], ["2024-01-25T17:54", 0.5],
+  ["2024-02-02T23:18", 0.75], ["2024-03-25T07:00", 0.5], ["2024-04-02T03:15", 0.75], ["2024-04-08T18:21", 0]]) {
+  const want = new Date(`${t}Z`), got = C.nextPhase(new Date(want - 3 * 86400000), which);
+  if (Math.abs(got - want) > 2 * 60000) problems.push(`phase ${which} near ${t}: got ${got.toISOString()}`);
+}
+
 if (problems.length) {
   console.error(`Build check failed:\n  ${problems.join("\n  ")}`);
   process.exit(1);

@@ -15,7 +15,7 @@ $("moon-age").textContent = `${age.toFixed(1)} days old, ${Math.round(C.moonIllu
 const full = C.nextPhase(now, 0.5), newm = C.nextPhase(now, 0);
 const [first, second] = full < newm ? [["Full", full], ["New", newm]] : [["New", newm], ["Full", full]];
 $("moon-next").textContent =
-  `${first[0]} moon about ${C.fmtDate(first[1], { year: false })}; ${second[0].toLowerCase()} about ${C.fmtDate(second[1], { year: false })}.`;
+  `${first[0]} moon on ${C.fmtDate(first[1], { year: false })}; ${second[0].toLowerCase()} on ${C.fmtDate(second[1], { year: false })}.`;
 
 // Daylight
 const lat = C.savedLatitude();

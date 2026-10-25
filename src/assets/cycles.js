@@ -16,24 +16,145 @@ export function fromJD(jd) {
   return new Date((jd - 2440587.5) * DAY_MS);
 }
 
-// ---------- The Moon (mean phases) ----------
-// Meeus eq. 49.1: the mean new moon k lunations after 2000 January 6.
-// This ignores the periodic terms, so a true phase can differ from
-// the mean one by up to about half a day.
+// ---------- The Moon (true phases) ----------
+// Meeus, Astronomical Algorithms, ch. 49. A principal phase is numbered
+// k: whole k for new moons counted from 2000 January 6, k + 0.25 first
+// quarter, k + 0.5 full, k + 0.75 last quarter. The mean phase follows
+// the steady average month (eq. 49.1); the true phase adds the periodic
+// terms, which Meeus gives as good to a minute or so for years near ours.
 const NEW_MOON_EPOCH = 2451550.09766;
 
-export function moonAge(date) {
-  const days = toJD(date) - NEW_MOON_EPOCH;
-  const age = ((days % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH;
-  return age;
+const norm = (deg) => ((deg % 360) + 360) % 360 * RAD;
+
+// The mean phase, as a Julian Ephemeris Day (Dynamical Time).
+export function meanPhaseJDE(k) {
+  const T = k / 1236.85;
+  return NEW_MOON_EPOCH + SYNODIC_MONTH * k +
+    0.00015437 * T * T - 0.00000015 * T ** 3 + 0.00000000073 * T ** 4;
 }
 
-// Fraction of the way through the lunation, 0 = new, 0.5 = full.
+// The fundamental arguments of the Moon's motion at phase k, in radians.
+function phaseArgs(k) {
+  const T = k / 1236.85;
+  return {
+    T,
+    E: 1 - 0.002516 * T - 0.0000074 * T * T, // shrinking eccentricity of the Earth's orbit
+    M: norm(2.5534 + 29.1053567 * k - 0.0000014 * T * T - 0.00000011 * T ** 3), // Sun's anomaly
+    Mp: norm(201.5643 + 385.81693528 * k + 0.0107582 * T * T + 0.00001238 * T ** 3 - 0.000000058 * T ** 4), // Moon's anomaly
+    F: norm(160.7108 + 390.67050284 * k - 0.0016118 * T * T - 0.00000227 * T ** 3 + 0.000000011 * T ** 4), // Moon's argument of latitude
+    O: norm(124.7746 - 1.56375588 * k + 0.0020672 * T * T + 0.00000215 * T ** 3), // longitude of the ascending node
+  };
+}
+
+// The periodic terms, as [coefficient in days, power of E, M, M', F, Ω]
+// multiples inside the sine. Meeus prints one list for new moons, one for
+// full moons and one for the quarters.
+const NEW_TERMS = [
+  [-0.40720, 0, 0, 1, 0, 0], [0.17241, 1, 1, 0, 0, 0], [0.01608, 0, 0, 2, 0, 0],
+  [0.01039, 0, 0, 0, 2, 0], [0.00739, 1, -1, 1, 0, 0], [-0.00514, 1, 1, 1, 0, 0],
+  [0.00208, 2, 2, 0, 0, 0], [-0.00111, 0, 0, 1, -2, 0], [-0.00057, 0, 0, 1, 2, 0],
+  [0.00056, 1, 1, 2, 0, 0], [-0.00042, 0, 0, 3, 0, 0], [0.00042, 1, 1, 0, 2, 0],
+  [0.00038, 1, 1, 0, -2, 0], [-0.00024, 1, -1, 2, 0, 0], [-0.00017, 0, 0, 0, 0, 1],
+  [-0.00007, 0, 2, 1, 0, 0], [0.00004, 0, 0, 2, -2, 0], [0.00004, 0, 3, 0, 0, 0],
+  [0.00003, 0, 1, 1, -2, 0], [0.00003, 0, 0, 2, 2, 0], [-0.00003, 0, 1, 1, 2, 0],
+  [0.00003, 0, -1, 1, 2, 0], [-0.00002, 0, -1, 1, -2, 0], [-0.00002, 0, 1, 3, 0, 0],
+  [0.00002, 0, 0, 4, 0, 0],
+];
+const FULL_TERMS = NEW_TERMS.map((t, i) => [
+  [-0.40614, 0.17302, 0.01614, 0.01043, 0.00734, -0.00515, 0.00209, -0.00111, -0.00057,
+    0.00056, -0.00042, 0.00042, 0.00038, -0.00024, -0.00017][i] ?? t[0], ...t.slice(1),
+]);
+const QUARTER_TERMS = [
+  [-0.62801, 0, 0, 1, 0, 0], [0.17172, 1, 1, 0, 0, 0], [-0.01183, 1, 1, 1, 0, 0],
+  [0.00862, 0, 0, 2, 0, 0], [0.00804, 0, 0, 0, 2, 0], [0.00454, 1, -1, 1, 0, 0],
+  [0.00204, 2, 2, 0, 0, 0], [-0.00180, 0, 0, 1, -2, 0], [-0.00070, 0, 0, 1, 2, 0],
+  [-0.00040, 0, 0, 3, 0, 0], [-0.00034, 1, -1, 2, 0, 0], [0.00032, 1, 1, 0, 2, 0],
+  [0.00032, 1, 1, 0, -2, 0], [-0.00028, 2, 2, 1, 0, 0], [0.00027, 1, 1, 2, 0, 0],
+  [-0.00017, 0, 0, 0, 0, 1], [-0.00005, 0, -1, 1, -2, 0], [0.00004, 0, 0, 2, 2, 0],
+  [-0.00004, 0, 1, 1, 2, 0], [0.00004, 0, -2, 1, 0, 0], [0.00003, 0, 1, 1, -2, 0],
+  [0.00003, 0, 3, 0, 0, 0], [0.00002, 0, 0, 2, -2, 0], [0.00002, 0, -1, 1, 2, 0],
+  [-0.00002, 0, 1, 3, 0, 0],
+];
+// Small pulls of the planets, the same for every phase: [coefficient, A0, A1 per k].
+const PLANET_TERMS = [
+  [0.000325, 299.77, 0.107408], [0.000165, 251.88, 0.016321], [0.000164, 251.83, 26.651886],
+  [0.000126, 349.42, 36.412478], [0.000110, 84.66, 18.206239], [0.000062, 141.74, 53.303771],
+  [0.000060, 207.14, 2.453732], [0.000056, 154.84, 7.30686], [0.000047, 34.52, 27.261239],
+  [0.000042, 207.19, 0.121824], [0.000040, 291.34, 1.844379], [0.000037, 161.72, 24.198154],
+  [0.000035, 239.56, 25.513099], [0.000023, 331.55, 3.592518],
+];
+
+// Every correction for phase k, largest first, each as
+// { days, args } where args is [M, M', F, Ω] multiples ("planets" for
+// the planetary sum and "quarter" for the quarters' extra W term).
+export function phaseCorrections(k) {
+  const a = phaseArgs(k);
+  const q = ((k % 1) + 1) % 1;
+  const list = q === 0 ? NEW_TERMS : q === 0.5 ? FULL_TERMS : QUARTER_TERMS;
+  const out = list.map(([c, e, m, mp, f, o]) => ({
+    days: c * a.E ** e * Math.sin(m * a.M + mp * a.Mp + f * a.F + o * a.O),
+    args: [m, mp, f, o],
+  }));
+  if (q === 0.25 || q === 0.75) {
+    const W = 0.00306 - 0.00038 * a.E * Math.cos(a.M) + 0.00026 * Math.cos(a.Mp) -
+      0.00002 * Math.cos(a.Mp - a.M) + 0.00002 * Math.cos(a.Mp + a.M) + 0.00002 * Math.cos(2 * a.F);
+    out.push({ days: q === 0.25 ? W : -W, args: "quarter" });
+  }
+  let planets = 0.000325 * Math.sin(norm(299.77 + 0.107408 * k - 0.009173 * a.T * a.T));
+  for (const [c, a0, a1] of PLANET_TERMS.slice(1)) planets += c * Math.sin(norm(a0 + a1 * k));
+  out.push({ days: planets, args: "planets" });
+  return out.sort((x, y) => Math.abs(y.days) - Math.abs(x.days));
+}
+
+export function truePhaseJDE(k) {
+  return meanPhaseJDE(k) + phaseCorrections(k).reduce((s, t) => s + t.days, 0);
+}
+
+// ΔT, the lag of Universal Time behind Dynamical Time, in seconds:
+// the polynomials of Espenak and Meeus for 2005 to 2050, and their
+// long-term parabola outside that span.
+export function deltaT(year) {
+  if (year >= 2005 && year <= 2050) {
+    const t = year - 2000;
+    return 62.92 + 0.32217 * t + 0.005589 * t * t;
+  }
+  const u = (year - 1820) / 100;
+  return -20 + 32 * u * u;
+}
+
+const jdeToDate = (jde) => {
+  const approx = fromJD(jde);
+  return fromJD(jde - deltaT(approx.getUTCFullYear() + approx.getUTCMonth() / 12) / 86400);
+};
+export const meanPhase = (k) => jdeToDate(meanPhaseJDE(k));
+export const truePhase = (k) => jdeToDate(truePhaseJDE(k));
+
+// The number of the latest principal phase (in quarters: phase k = q/4)
+// at or before `date`.
+function quarterBefore(date) {
+  let q = Math.floor((toJD(date) - NEW_MOON_EPOCH) / (SYNODIC_MONTH / 4));
+  while (truePhase(q / 4) > date) q--;
+  while (truePhase((q + 1) / 4) <= date) q++;
+  return q;
+}
+
+// Fraction of the way through the lunation, 0 = new, 0.5 = full,
+// interpolated between the true principal phases either side of `date`,
+// so the quarters and the full moon fall at their true moments.
 export function moonPhase(date) {
-  return moonAge(date) / SYNODIC_MONTH;
+  const q = quarterBefore(date);
+  const t0 = truePhase(q / 4), t1 = truePhase((q + 1) / 4);
+  const p = (q + (date - t0) / (t1 - t0)) / 4;
+  return ((p % 1) + 1) % 1;
 }
 
-// Fraction of the disc lit, from the phase angle of a mean lunation.
+// Days since the last true new moon.
+export function moonAge(date) {
+  const q = quarterBefore(date);
+  return (date - truePhase(Math.floor(q / 4))) / DAY_MS;
+}
+
+// Fraction of the disc lit, approximated from the phase.
 export function moonIllumination(phase) {
   return (1 - Math.cos(2 * Math.PI * phase)) / 2;
 }
@@ -46,13 +167,17 @@ export function phaseName(phase) {
   return names[Math.floor(phase * 8 + 0.5) % 8];
 }
 
-// The next mean phase at or after `date`. `which` is 0 new, 0.25 first
-// quarter, 0.5 full, 0.75 last quarter.
+// The number k of the next phase of kind `which` (0 new, 0.25 first
+// quarter, 0.5 full, 0.75 last quarter) at or after `date`.
+export function nextPhaseK(date, which) {
+  let k = Math.floor((toJD(date) - NEW_MOON_EPOCH) / SYNODIC_MONTH) - 1 + which;
+  while (truePhase(k) < date) k += 1;
+  return k;
+}
+
+// The next true phase at or after `date`, as a Date.
 export function nextPhase(date, which) {
-  const k0 = (toJD(date) - NEW_MOON_EPOCH) / SYNODIC_MONTH;
-  let k = Math.floor(k0) + which;
-  if (k < k0) k += 1;
-  return fromJD(NEW_MOON_EPOCH + k * SYNODIC_MONTH);
+  return truePhase(nextPhaseK(date, which));
 }
 
 // SVG path for the lit part of the disc as seen from the northern

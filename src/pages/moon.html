@@ -1,4 +1,4 @@
-<!--meta {"title": "The Moon", "description": "Why the Moon's month is 29.53 days, longer than one orbit, and how its phases come back to the same dates every nineteen years. With a live calendar of phases.", "script": "moon.js"} -->
+<!--meta {"title": "The Moon", "description": "Why the Moon's month is 29.53 days, longer than one orbit, why a true phase can fall half a day from the average, and how the phases return every nineteen years. With a live calendar of true phases.", "script": "moon.js"} -->
 <p class="kicker">Chapter i</p>
 <h1>The Moon</h1>
 <p class="lede">The oldest clock that anyone can read without an instrument, and one that refuses to divide evenly into anything else.</p>
@@ -30,7 +30,28 @@
   <thead><tr><th>Full moon</th><th>Time (yours)</th><th class="r">Lunations from now</th></tr></thead>
   <tbody id="fulls"></tbody>
 </table></div>
-<p class="note">These are <em>mean</em> phases, from the steady average month. The real Moon runs ahead of or behind the average by up to about half a day, so the true time can fall on the day before or after.<sup><a href="#s2">2</a></sup></p>
+<p class="note">These are the Moon’s <em>true</em> phases, worked out below, and should fall within a minute or two of the times printed in published almanacs.<sup><a href="#s2">2</a></sup></p>
+
+<h2>The true Moon and the mean</h2>
+<div class="prose">
+<p>The simplest way to find a phase is to count whole average months from one known new moon. Meeus takes the mean new moon of 6 January 2000 and adds 29.530588861 days at a time. That gives the <em>mean</em> phase, the moment an imaginary Moon would reach it if it went round at an even pace. The real Moon does not, and its true phase can fall well over half a day either side.</p>
+
+<p>Two terms do most of the work. The Moon’s orbit is an ellipse, and the Moon runs fastest near perigee, its nearest point. A phase that falls in the fortnight after perigee comes early, and one after apogee comes late, by up to 0.407 of a day at new and full moon, about 9¾ hours. The Earth’s orbit is an ellipse too, so the Sun seems to move fastest across the sky in early January, and the Moon has further to go to catch it. That term is worth up to 0.173 of a day, about 4 hours. At the quarters the Moon’s term is larger, 0.628 of a day, about 15 hours, because the evection, a stretching of the Moon’s orbit by the Sun’s pull, adds to it there. Two dozen smaller terms follow, and fourteen smaller still for the pull of the planets.<sup><a href="#s2">2</a></sup></p>
+</div>
+
+<figure>
+  <svg class="chart" id="drift" viewBox="0 0 720 260" role="img" aria-labelledby="drift-cap"></svg>
+  <figcaption id="drift-cap">How far each true new moon (filled) and full moon (open) falls from the mean one over the next three years, in hours. Above the line the true phase is later.</figcaption>
+</figure>
+
+<h3 id="working-title">The next full moon, worked out</h3>
+<figure>
+  <div class="table-wrap"><table class="working">
+    <thead><tr><th>Term</th><th>What it is</th><th class="r">Hours</th></tr></thead>
+    <tbody id="working"></tbody>
+  </table></div>
+  <figcaption>The mean full moon, the largest periodic terms of Meeus’s chapter 49 evaluated for it, and the true time they give. <em>M</em> is the Sun’s mean anomaly, <em>M′</em> the Moon’s, <em>F</em> the Moon’s argument of latitude, <em>Ω</em> the longitude of its node and <em>E</em> a small factor for the slow change in the Earth’s orbit. Times are converted from Dynamical Time to Universal Time by subtracting ΔT, about 69 seconds now.<sup><a href="#s4">4</a></sup></figcaption>
+</figure>
 
 <h2>Nineteen years</h2>
 <div class="prose">
@@ -45,6 +66,7 @@
 <h2 id="sources">Sources</h2>
 <ol class="note">
   <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Lunar_month">Lunar month</a>”, for the mean synodic and sidereal months and the range of single months.</li>
-  <li id="s2">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (Willmann-Bell, 1998), chapter 49, for the mean new moon of 2000 January 6 (JDE 2451550.09766) and the mean month of 29.530588861 days used here. The chapter’s corrections for the true phases are not yet applied.</li>
+  <li id="s2">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (Willmann-Bell, 1998), chapter 49, for the mean new moon of 2000 January 6 (JDE 2451550.09766) and the mean month of 29.530588861 days used here. The true phases use the chapter’s periodic and planetary terms, checked by the site’s build against the chapter’s worked example (the new moon of February 1977) and against the U.S. Naval Observatory’s <a href="https://aa.usno.navy.mil/data/MoonPhases">phases of the Moon</a> for early 2024, a U.S. government work in the public domain, all of which it matches to within a minute.</li>
   <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Metonic_cycle">Metonic cycle</a>”, for Meton and the 235-month cycle.</li>
+  <li id="s4">Fred Espenak and Jean Meeus, “<a href="https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html">Polynomial expressions for Delta T</a>”, NASA Goddard Space Flight Center, for ΔT.</li>
 </ol>
