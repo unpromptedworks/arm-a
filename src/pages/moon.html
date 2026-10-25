@@ -1,0 +1,50 @@
+<!--meta {"title": "The Moon", "description": "Why the Moon's month is 29.53 days, longer than one orbit, and how its phases come back to the same dates every nineteen years. With a live calendar of phases.", "script": "moon.js"} -->
+<p class="kicker">Chapter i</p>
+<h1>The Moon</h1>
+<p class="lede">The oldest clock that anyone can read without an instrument, and one that refuses to divide evenly into anything else.</p>
+
+<div class="prose">
+<p class="dropcap">From one new moon to the next takes, on average, 29.53059 days: 29 days, 12 hours, 44 minutes and 3 seconds. This is the <em>synodic</em> month, the month of phases. Single months stray from that mean. The shortest run to about 29.27 days and the longest to about 29.83, because the Moon’s orbit is an ellipse and the Earth’s is too.<sup><a href="#s1">1</a></sup></p>
+
+<p>The Moon goes once round the Earth, measured against the stars, in only 27.32 days. The two days’ difference come from the Earth itself. While the Moon makes its circuit, the Earth carries it about a thirteenth of the way round the Sun, and the Moon has to travel a little further to stand in the same line with the Sun again. The two periods are bound by a simple sum:</p>
+</div>
+
+<figure>
+  <div class="table-wrap"><table class="working">
+    <tbody id="derive"></tbody>
+  </table></div>
+  <figcaption>One over the synodic month equals one over the sidereal month minus one over the year. The figures in the last column are computed by this page.</figcaption>
+</figure>
+
+<h2>This month</h2>
+<div class="controls">
+  <button type="button" id="prev" aria-label="Previous month">‹ earlier</button>
+  <strong id="month-name" aria-live="polite"></strong>
+  <button type="button" id="next" aria-label="Next month">later ›</button>
+</div>
+<div class="month" id="month"></div>
+<p class="note">The phase drawn for each day is the one at noon, local time, as seen from the northern hemisphere. South of the equator the picture is mirrored: the waxing Moon is lit on the left.</p>
+
+<h2>The coming full moons</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Full moon</th><th>Time (yours)</th><th class="r">Lunations from now</th></tr></thead>
+  <tbody id="fulls"></tbody>
+</table></div>
+<p class="note">These are <em>mean</em> phases, from the steady average month. The real Moon runs ahead of or behind the average by up to about half a day, so the true time can fall on the day before or after.<sup><a href="#s2">2</a></sup></p>
+
+<h2>Nineteen years</h2>
+<div class="prose">
+<p>Twelve lunar months fall about eleven days short of a year, and thirteen overshoot it, so the phases drift through the calendar. But 235 months come within hours of nineteen years.<sup><a href="#s3">3</a></sup> After nineteen years the Moon shows the same face on very nearly the same dates. Meton of Athens introduced the cycle to the Athenian calendar in 432 BC. It still underlies the Hebrew calendar and the calculation of Easter.</p>
+</div>
+<figure>
+  <div class="table-wrap"><table class="working"><tbody id="metonic"></tbody></table></div>
+  <figcaption>The mismatch is about two hours in nineteen years, a day in roughly two hundred and twenty.</figcaption>
+</figure>
+<p class="prose">In the Easter calculation, the first step, <code>a = year mod 19</code>, is this cycle. It finds the year’s place in the nineteen, which medieval calendars called its golden number (<code>a + 1</code>). This year’s golden number is <strong id="golden"></strong>. <a href="easter.html">See it at work →</a></p>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Lunar_month">Lunar month</a>”, for the mean synodic and sidereal months and the range of single months.</li>
+  <li id="s2">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (Willmann-Bell, 1998), chapter 49, for the mean new moon of 2000 January 6 (JDE 2451550.09766) and the mean month of 29.530588861 days used here. The chapter’s corrections for the true phases are not yet applied.</li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Metonic_cycle">Metonic cycle</a>”, for Meton and the 235-month cycle.</li>
+</ol>

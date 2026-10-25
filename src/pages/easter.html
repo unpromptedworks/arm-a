@@ -1,0 +1,38 @@
+<!--meta {"title": "Easter", "description": "The date of Easter is worked out from the Moon and the equinox in fourteen small sums. Try them on any year, and see the whole 5,700,000-year cycle counted in your browser.", "script": "easter.js"} -->
+<p class="kicker">Chapter iii</p>
+<h1>Easter</h1>
+<p class="lede">A feast with no fixed date. It is set by a Moon that is not quite the real Moon and an equinox that is not quite the real equinox, and fourteen lines of arithmetic will find it for any year.</p>
+
+<div class="prose">
+<p class="dropcap">In the Western churches, Easter is the first Sunday after the first full moon falling on or after 21 March. The full moon here is not the one in the sky. It is an <em>ecclesiastical</em> full moon, taken from tables built on the nineteen-year cycle of the <a href="moon.html">Moon chapter</a>, and 21 March stands in for the equinox whatever the Sun is doing. So Easter can fall no earlier than 22 March and no later than 25 April.<sup><a href="#s1">1</a></sup></p>
+<p>Calendar reckoners boiled the tables down to a short run of integer sums. The version below was sent to the journal <em>Nature</em> in 1876 by an unnamed correspondent in New York. It is often called the Meeus/Jones/Butcher algorithm, after writers who later reprinted it.<sup><a href="#s1">1</a></sup> Each line uses only whole numbers, division that throws away the remainder, and the remainder itself (<code>mod</code>).</p>
+</div>
+
+<div class="controls">
+  <label for="year">Year</label>
+  <input type="number" id="year" min="1583" max="9999" step="1">
+  <span id="answer" class="big" aria-live="polite"></span>
+</div>
+<div class="table-wrap"><table class="working">
+  <thead><tr><th></th><th>Rule</th><th class="r">Value</th></tr></thead>
+  <tbody id="steps"></tbody>
+</table></div>
+<p class="note">The Gregorian calendar began in 1582, so the sums hold from 1583 on. Most Eastern Orthodox churches reckon Easter on the older Julian calendar instead, which gives a different date in most years.</p>
+
+<h2>Five million, seven hundred thousand years</h2>
+<div class="prose">
+<p>The Gregorian calendar repeats its weekdays every 400 years. Its lunar tables carry their own slow corrections, a day in every few centuries, and the two do not come back into step for a long time. The full sequence of Easter dates repeats only after 5,700,000 years.<sup><a href="#s1">1</a></sup> This page runs the sums once for each year of that cycle and counts how often each date turns up.</p>
+</div>
+<figure>
+  <svg class="chart" id="hist" viewBox="0 0 720 280" role="img" aria-labelledby="hist-cap"></svg>
+  <figcaption id="hist-cap">Counting the cycle…</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Look-ups</th><th class="r">Answer</th></tr></thead>
+  <tbody id="facts"></tbody>
+</table></div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Date_of_Easter">Date of Easter</a>”, for the rule, the range of dates, the anonymous algorithm and the length of the cycle. The frequencies on this page are counted here, not copied.</li>
+</ol>
