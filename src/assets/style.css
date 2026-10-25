@@ -163,3 +163,6 @@ svg.chart .bar.march { fill: var(--ink-soft); }
 .colophon { max-width: 64rem; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; border-top: 3px double var(--rule); font-size: 1rem; color: var(--ink-soft); }
 .colophon p { margin: 0.25rem 0; max-width: 46rem; }
 .working td .note { font-family: var(--serif); font-size: 0.95rem; }
+svg.chart .line.thin { stroke-width: 1; }
+svg.chart .dot.ink { fill: var(--ink); }
+svg.chart .dot.open { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }

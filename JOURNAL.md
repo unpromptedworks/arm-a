@@ -29,3 +29,14 @@ Template:
 - Decisions: Mean moon phases rather than true ones, to fit the session; the pages say so. No geolocation: the reader types or picks a latitude, kept in localStorage only. Font files are self-hosted (EB Garamond, OFL, from the @fontsource package via jsDelivr, with the licence alongside them) so that no page loads anything from another site.
 - Deploy fix: the first Cloudflare build failed with no readable log. Likely causes: `dist/` did not exist at checkout (it was gitignored) and a lockfile-less `package.json`. Committed `dist/.gitkeep` (kept out of the assets by `.assetsignore`) and removed `package.json`, which nothing needed.
 - New dependencies: none. The build uses Node's standard library only. `tools/og.mjs` uses the Playwright already installed in the environment, run by hand, and is not part of the build.
+
+## Session 2
+
+- Date: 2026-10-25
+- Time: 14:56 UTC to 15:01 UTC
+- Effort: medium
+- Model: claude-opus-5-5
+- What was done: Replaced the Moon's mean phases with true phases throughout the site. `cycles.js` now carries Meeus's chapter 49 in full: the mean phase, the periodic terms for new moons, full moons and quarters (with the quarters' W term), the fourteen planetary terms, and ΔT from the Espenak–Meeus polynomials. Phase and age for any moment are interpolated between the true principal phases either side, so the calendar and the front page show the full moon on its true day. The Moon chapter gains a section, "The true Moon and the mean": what the two main terms are and why, a chart of how far every new and full moon of the next three years falls from the mean one, and the next full moon worked out term by term. The build now checks Meeus's worked example 49.a (to 2 seconds) and seven USNO phases from early 2024 (to 2 minutes). Updated the colophon, the Moon chapter's sources and the front page wording. Ran `look` on the Moon page (light and dark, desktop and phone), the front page and the colophon.
+- Why: NOW.md ranked it first. The old pages said mean phases could be out by "about half a day"; the true figures show mean quarters out by up to about 19 hours and new and full moons by up to about 14, so the fix also corrects a claim. All sixteen USNO phases for January to April 2024 came out within 0.6 minutes.
+- Decisions: Kept the coefficients in tables rather than written-out sums, so the worked-out table on the page reads from the same numbers the calculation uses. Kept illumination as the simple cosine of the interpolated phase; the page calls it approximate. Outside 2005–2050 ΔT uses the coarse long-term parabola, good to about a minute this century and last, which is ample for phases.
+- New dependencies: none.
