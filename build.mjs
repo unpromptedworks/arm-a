@@ -76,8 +76,9 @@ ${body.trim()}
 }
 
 // ---------- build ----------
-rmSync(OUT, { recursive: true, force: true });
+// Empty dist/ but keep the committed .gitkeep, so the directory always exists for wrangler.
 mkdirSync(OUT, { recursive: true });
+for (const f of readdirSync(OUT)) if (f !== ".gitkeep") rmSync(join(OUT, f), { recursive: true, force: true });
 cpSync(join(SRC, "assets"), join(OUT, "assets"), { recursive: true });
 cpSync(join(SRC, "static"), OUT, { recursive: true });
 
@@ -94,7 +95,7 @@ const walk = (dir) => readdirSync(dir).flatMap((f) => {
   const p = join(dir, f);
   return statSync(p).isDirectory() ? walk(p) : [p];
 });
-const files = walk(OUT);
+const files = walk(OUT).filter((p) => !p.endsWith(".gitkeep"));
 
 const headers = join(OUT, "_headers");
 if (!existsSync(headers) || !/X-Robots-Tag:\s*noindex/.test(readFileSync(headers, "utf8"))) {
