@@ -1,0 +1,47 @@
+<!--meta {"title": "Daylight", "description": "How long the Sun is up through a whole year at any latitude, from the even days of the equator to the months-long days and nights of the poles. Worked out live with the sunrise equation.", "script": "daylight.js"} -->
+<p class="kicker">Chapter ii</p>
+<h1>Daylight</h1>
+<p class="lede">The Earth leans 23.4 degrees from upright, and over a year that lean turns first one hemisphere toward the Sun and then the other. The long days and short ones come from this alone.</p>
+
+<div class="controls">
+  <label for="lat">Latitude</label>
+  <input type="range" id="lat-range" min="-89" max="89" step="0.1" aria-label="Latitude slider">
+  <input type="number" id="lat" min="-89" max="89" step="0.1">
+  <select id="preset" aria-label="Choose a place">
+    <option value="">a place…</option>
+    <option value="-0.2">Quito, 0.2° S</option>
+    <option value="-33.9">Sydney, 33.9° S</option>
+    <option value="30.0">Cairo, 30.0° N</option>
+    <option value="40.7">New York, 40.7° N</option>
+    <option value="51.5">London, 51.5° N</option>
+    <option value="64.1">Reykjavík, 64.1° N</option>
+    <option value="69.6">Tromsø, 69.6° N</option>
+    <option value="-54.8">Ushuaia, 54.8° S</option>
+  </select>
+</div>
+<p class="note">Positive for north, negative for south. Your browser remembers the choice, and the front page uses it too. Nothing is sent anywhere.</p>
+
+<figure>
+  <svg class="chart" id="chart" viewBox="0 0 720 300" role="img" aria-labelledby="chart-cap"></svg>
+  <figcaption id="chart-cap">Hours of daylight through the year at the chosen latitude (solid), against the equator (dashed). The red line is today.</figcaption>
+</figure>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Day</th><th>Date</th><th class="r">Daylight</th></tr></thead>
+  <tbody id="marks"></tbody>
+</table></div>
+
+<h2>How the figure is reached</h2>
+<div class="prose">
+<p>For any day the page finds the Sun’s declination: how far north or south of the celestial equator it stands. It uses the Astronomical Almanac’s low-precision formulae, which are good to about a hundredth of a degree for the years around now.<sup><a href="#s1">1</a></sup> The sunrise equation then gives the angle the Earth must turn between sunrise and sunset:<sup><a href="#s2">2</a></sup></p>
+<p class="mono">cos H₀ = (sin h₀ − sin φ sin δ) / (cos φ cos δ)</p>
+<p>where φ is the latitude, δ the declination, and h₀ is −0.833°. Each fifteen degrees of turning is an hour, so the day lasts 2H₀ ÷ 15 hours. When the right-hand side falls below −1 the Sun never sets, and above +1 it never rises.</p>
+<p>The −0.833° is why the equinox is not a day of twelve hours anywhere. Sunrise counts from the moment the Sun’s upper edge clears the horizon, not its centre, and the air bends its light over the horizon before it has truly arrived. Together these add some minutes to every day, and more the further you go from the equator.</p>
+<p>The figure is the time between sunrise and sunset over a flat sea horizon. Hills, height above the sea and the weather will move a real sunrise by minutes.</p>
+</div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Position_of_the_Sun">Position of the Sun</a>”, for the low-precision ecliptic coordinates and declination.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Sunrise_equation">Sunrise equation</a>”, for the generalised equation and the −0.833° correction for refraction and the Sun’s disc.</li>
+</ol>
