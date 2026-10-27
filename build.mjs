@@ -16,6 +16,7 @@ const NAV = [
   { file: "moon.html", short: "The Moon" },
   { file: "daylight.html", short: "Daylight" },
   { file: "easter.html", short: "Easter" },
+  { file: "eclipses.html", short: "Eclipses" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -150,6 +151,45 @@ for (const [t, which] of [["2024-01-11T11:57", 0], ["2024-01-18T03:52", 0.25], [
   const want = new Date(`${t}Z`), got = C.nextPhase(new Date(want - 3 * 86400000), which);
   if (Math.abs(got - want) > 2 * 60000) problems.push(`phase ${which} near ${t}: got ${got.toISOString()}`);
 }
+
+// Eclipses: every eclipse NASA lists for 2021 to 2030 (Espenak), by
+// greatest eclipse in Dynamical Time, kind, saros and magnitude (solar
+// partials and lunar umbral). Meeus ch. 54 misses only the 2027 July 18
+// penumbral eclipse, which barely touches the penumbra.
+const NASA = [
+  ["2021-05-26T11:19:53", "L", "total", 121, 1.009], ["2021-06-10T10:43:06", "S", "annular", 147],
+  ["2021-11-19T09:04:06", "L", "partial", 126, 0.974], ["2021-12-04T07:34:38", "S", "total", 152],
+  ["2022-04-30T20:42:36", "S", "partial", 119, 0.640], ["2022-05-16T04:12:42", "L", "total", 131, 1.414],
+  ["2022-10-25T11:01:19", "S", "partial", 124, 0.862], ["2022-11-08T11:00:22", "L", "total", 136, 1.359],
+  ["2023-04-20T04:17:55", "S", "hybrid", 129], ["2023-05-05T17:24:05", "L", "penumbral", 141, -0.046],
+  ["2023-10-14T18:00:40", "S", "annular", 134], ["2023-10-28T20:15:18", "L", "partial", 146, 0.122],
+  ["2024-03-25T07:13:59", "L", "penumbral", 113, -0.132], ["2024-04-08T18:18:29", "S", "total", 139],
+  ["2024-09-18T02:45:25", "L", "partial", 118, 0.085], ["2024-10-02T18:46:13", "S", "annular", 144],
+  ["2025-03-14T06:59:56", "L", "total", 123, 1.178], ["2025-03-29T10:48:36", "S", "partial", 149, 0.938],
+  ["2025-09-07T18:12:58", "L", "total", 128, 1.362], ["2025-09-21T19:43:04", "S", "partial", 154, 0.855],
+  ["2026-02-17T12:13:05", "S", "annular", 121], ["2026-03-03T11:34:52", "L", "total", 133, 1.151],
+  ["2026-08-12T17:47:05", "S", "total", 126], ["2026-08-28T04:14:04", "L", "partial", 138, 0.930],
+  ["2027-02-06T16:00:47", "S", "annular", 131], ["2027-02-20T23:14:06", "L", "penumbral", 143, -0.057],
+  ["2027-08-02T10:07:49", "S", "total", 136], ["2027-08-17T07:14:59", "L", "penumbral", 148, -0.525],
+  ["2028-01-12T04:14:13", "L", "partial", 115, 0.066], ["2028-01-26T15:08:58", "S", "annular", 141],
+  ["2028-07-06T18:20:57", "L", "partial", 120, 0.389], ["2028-07-22T02:56:39", "S", "total", 146],
+  ["2028-12-31T16:53:15", "L", "total", 125, 1.246], ["2029-01-14T17:13:47", "S", "partial", 151, 0.871],
+  ["2029-06-12T04:06:13", "S", "partial", 118, 0.458], ["2029-06-26T03:23:22", "L", "total", 130, 1.844],
+  ["2029-07-11T15:37:18", "S", "partial", 156, 0.230], ["2029-12-05T15:03:57", "S", "partial", 123, 0.891],
+  ["2029-12-20T22:43:12", "L", "total", 135, 1.117], ["2030-06-01T06:29:13", "S", "annular", 128],
+  ["2030-06-15T18:34:34", "L", "partial", 140, 0.502], ["2030-11-25T06:51:37", "S", "total", 133],
+  ["2030-12-09T22:28:51", "L", "penumbral", 145, -0.163],
+];
+const found = C.eclipsesFrom(new Date("2021-01-01T00:00:00Z"), NASA.length);
+NASA.forEach(([td, body, kind, saros, mag], i) => {
+  const e = found[i], what = `${body === "S" ? "solar" : "lunar"} eclipse ${td.slice(0, 10)}`;
+  if (!e) return problems.push(`${what}: not found`);
+  const at = C.fromJD(e.jde);
+  if (Math.abs(at - new Date(`${td}Z`)) > 3 * 60000) problems.push(`${what}: greatest at ${at.toISOString()}`);
+  expect(`${e.solar ? "S" : "L"} ${e.kind}`, `${body} ${kind}`, what);
+  expect(C.sarosNumber(e.k), saros, `${what} saros`);
+  if (mag !== undefined && Math.abs(e.magnitude - mag) > 0.015) problems.push(`${what}: magnitude ${e.magnitude.toFixed(3)}, want ${mag}`);
+});
 
 if (problems.length) {
   console.error(`Build check failed:\n  ${problems.join("\n  ")}`);

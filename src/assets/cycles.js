@@ -199,6 +199,93 @@ export function moonSVG(phase, size = 120, label = "") {
     `<path d="${moonPath(phase, c, r)}" class="moon-lit"/></svg>`;
 }
 
+// ---------- Eclipses ----------
+// Meeus, Astronomical Algorithms, ch. 54. An eclipse can happen only at
+// a new moon (of the Sun) or a full moon (of the Moon) that falls near
+// one of the nodes, where the Moon's tilted orbit crosses the ecliptic.
+// The chapter tests each phase k for that, then finds the time of
+// greatest eclipse, γ (the least distance of the Moon's shadow axis from
+// the Earth's centre, in Earth radii, positive northward) and u (the
+// radius of the umbral cone in the fundamental plane).
+export const DRACONIC_MONTH = 27.212220817; // node to node, days
+export const ANOMALISTIC_MONTH = 27.554549878; // perigee to perigee, days
+export const ECLIPSE_YEAR = 346.620075883; // the Sun from a node back to it, days
+
+export function eclipseAt(k) {
+  const solar = ((k % 1) + 1) % 1 === 0;
+  const { T, E, M, Mp, F, O } = phaseArgs(k);
+  // Too far from the node: no eclipse of any kind.
+  if (Math.abs(Math.sin(F)) > 0.36) return null;
+  const F1 = F - 0.02665 * RAD * Math.sin(O);
+  const A1 = norm(299.77 + 0.107408 * k - 0.009173 * T * T);
+  const s = Math.sin, c = Math.cos;
+  const corr = (solar ? -0.4075 * s(Mp) + 0.1721 * E * s(M) : -0.4065 * s(Mp) + 0.1727 * E * s(M)) +
+    0.0161 * s(2 * Mp) - 0.0097 * s(2 * F1) + 0.0073 * E * s(Mp - M) - 0.0050 * E * s(Mp + M) -
+    0.0023 * s(Mp - 2 * F1) + 0.0021 * E * s(2 * M) + 0.0012 * s(Mp + 2 * F1) +
+    0.0006 * E * s(2 * Mp + M) - 0.0004 * s(3 * Mp) - 0.0003 * E * s(M + 2 * F1) +
+    0.0003 * s(A1) - 0.0002 * E * s(M - 2 * F1) - 0.0002 * E * s(2 * Mp - M) - 0.0002 * s(O);
+  const jde = meanPhaseJDE(k) + corr;
+  const P = 0.2070 * E * s(M) + 0.0024 * E * s(2 * M) - 0.0392 * s(Mp) + 0.0116 * s(2 * Mp) -
+    0.0073 * E * s(Mp + M) + 0.0067 * E * s(Mp - M) + 0.0118 * s(2 * F1);
+  const Q = 5.2207 - 0.0048 * E * c(M) + 0.0020 * E * c(2 * M) - 0.3299 * c(Mp) -
+    0.0060 * E * c(Mp + M) + 0.0041 * E * c(Mp - M);
+  const W = Math.abs(c(F1));
+  const gamma = (P * c(F1) + Q * s(F1)) * (1 - 0.0048 * W);
+  const u = 0.0059 + 0.0046 * E * c(M) - 0.0182 * c(Mp) + 0.0004 * c(2 * Mp) - 0.0005 * c(M + Mp);
+  const g = Math.abs(gamma);
+  const out = { k, solar, jde, date: jdeToDate(jde), F: (F / RAD), sinF: s(F), P, Q, gamma, u };
+
+  if (solar) {
+    if (g > 1.5433 + u) return null;
+    if (g < 0.9972) {
+      // The shadow's axis meets the Earth: a central eclipse.
+      const omega = 0.00464 * Math.sqrt(1 - g * g);
+      out.kind = u < 0 ? "total" : u > 0.0047 ? "annular" : u < omega ? "hybrid" : "annular";
+      out.central = true;
+    } else if (g < 0.9972 + Math.abs(u)) {
+      // The axis misses, but an edge of the umbra grazes the polar regions.
+      out.kind = u < 0 ? "total" : "annular";
+      out.central = false;
+    } else {
+      out.kind = "partial";
+      out.magnitude = (1.5433 + u - g) / (0.5461 + 2 * u);
+    }
+    return out;
+  }
+  // Lunar: the Moon in the Earth's penumbra and umbra.
+  out.penumbral = (1.5573 + u - g) / 0.5450;
+  out.magnitude = (1.0128 - u - g) / 0.5450;
+  if (out.penumbral <= 0) return null;
+  out.kind = out.magnitude >= 1 ? "total" : out.magnitude > 0 ? "partial" : "penumbral";
+  // Semidurations in minutes of each stage, where it happens.
+  const n = 0.5458 + 0.0400 * c(Mp);
+  const semi = (h) => (h > g ? (60 / n) * Math.sqrt(h * h - g * g) : 0);
+  out.semi = { penumbral: semi(1.5573 + u), partial: semi(1.0128 - u), total: semi(0.4678 - u) };
+  return out;
+}
+
+// Every eclipse, solar and lunar, from `date` on, in time order, until
+// `count` have been found.
+export function eclipsesFrom(date, count) {
+  const out = [];
+  let k = Math.floor((toJD(date) - NEW_MOON_EPOCH) / SYNODIC_MONTH) - 1;
+  for (; out.length < count; k += 0.5) {
+    const e = eclipseAt(k);
+    if (e && e.date >= date) out.push(e);
+  }
+  return out;
+}
+
+// Saros series numbers. Eclipses 223 lunations apart belong to one
+// series; one lunation later is always 38 series on (mod 223). Anchored
+// on NASA's numbering: the total solar eclipse of 2024 April 8 (k = 300)
+// is saros 139, the total lunar eclipse of 2025 March 14 (k = 311.5) saros 123.
+export function sarosNumber(k) {
+  const [k0, s0] = ((k % 1) + 1) % 1 === 0 ? [300, 139] : [311.5, 123];
+  const n = ((s0 + 38 * Math.round(k - k0)) % 223 + 223) % 223;
+  return n === 0 ? 223 : n;
+}
+
 // ---------- The Sun (low-precision position) ----------
 // The Astronomical Almanac's low-precision formulae, good to about
 // 0.01 degree between 1950 and 2050.

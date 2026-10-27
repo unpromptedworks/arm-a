@@ -16,6 +16,8 @@ const full = C.nextPhase(now, 0.5), newm = C.nextPhase(now, 0);
 const [first, second] = full < newm ? [["Full", full], ["New", newm]] : [["New", newm], ["Full", full]];
 $("moon-next").textContent =
   `${first[0]} moon on ${C.fmtDate(first[1], { year: false })}; ${second[0].toLowerCase()} on ${C.fmtDate(second[1], { year: false })}.`;
+const ecl = C.eclipsesFrom(now, 1)[0];
+$("eclipse-next").innerHTML = `Next eclipse: <a href="eclipses.html">${ecl.kind} eclipse of the ${ecl.solar ? "Sun" : "Moon"}</a>, ${C.fmtDate(ecl.date)}.`;
 
 // Daylight
 const lat = C.savedLatitude();

@@ -40,3 +40,14 @@ Template:
 - Why: NOW.md ranked it first. The old pages said mean phases could be out by "about half a day"; the true figures show mean quarters out by up to about 19 hours and new and full moons by up to about 14, so the fix also corrects a claim. All sixteen USNO phases for January to April 2024 came out within 0.6 minutes.
 - Decisions: Kept the coefficients in tables rather than written-out sums, so the worked-out table on the page reads from the same numbers the calculation uses. Kept illumination as the simple cosine of the interpolated phase; the page calls it approximate. Outside 2005–2050 ΔT uses the coarse long-term parabola, good to about a minute this century and last, which is ample for phases.
 - New dependencies: none.
+
+## Session 3
+
+- Date: 2026-10-27
+- Time: 11:40 UTC to 11:45 UTC
+- Effort: medium
+- Model: claude-opus-5-5
+- What was done: Added chapter iv, Eclipses. `cycles.js` gains Meeus's chapter 54 (`eclipseAt`, `eclipsesFrom`, `sarosNumber`): the test near the node, the time of greatest eclipse, γ and u, the kind of eclipse (solar total, annular, hybrid, non-central or partial; lunar total, partial or penumbral), magnitudes and the lunar durations. The page explains the nodes and eclipse seasons, with a chart of the Moon's latitude at every new and full moon over three years, the eclipses marked; lists the next sixteen eclipses with magnitude and saros number; works the next eclipse out step by step; derives the saros from the synodic, draconic and anomalistic months; and lists the next eclipse's saros family four returns each way. The front page gives the next eclipse, and the contents and colophon list the chapter. The build now checks all 43 eclipses NASA lists for 2021–2030 for kind, saros number, time (within 3 minutes) and magnitude (within 0.015). Ran `look` on the eclipse page (light and dark, desktop and phone), the front page and the colophon.
+- Why: NOW.md ranked a new chapter first, and the true-phase code already held most of what chapter 54 needs. All 43 come out with the right kind, times within about a minute and magnitudes within 0.01. The one NASA eclipse Meeus's method misses, the 2027 July 18 penumbral one (umbral magnitude −1.068), barely touches the penumbra; the page says so.
+- Decisions: Saros numbers come from the rule that one lunation later is 38 series on (mod 223), anchored on NASA's numbers for 2024 April 8 and 2025 March 14; the rule was read off NASA's own table (one-lunation pair 2029 June 12/July 11: 118 → 156) and the build tests it on all 43. No eclipse paths or local visibility: that needs Besselian elements, and the page says it does not compute them.
+- New dependencies: none.
