@@ -166,3 +166,5 @@ svg.chart .bar.march { fill: var(--ink-soft); }
 svg.chart .line.thin { stroke-width: 1; }
 svg.chart .dot.ink { fill: var(--ink); }
 svg.chart .dot.open { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+svg.chart .dot.open.hit { stroke: var(--rubric); stroke-width: 2; fill: var(--paper); }
+svg.chart text.tag { fill: var(--rubric); font-size: 11px; font-variant: small-caps; }

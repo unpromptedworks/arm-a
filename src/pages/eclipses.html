@@ -1,0 +1,63 @@
+<!--meta {"title": "Eclipses", "description": "Why the Sun and Moon are not eclipsed every month, how eclipses come in seasons six months apart, and how they repeat after a saros of 18 years and 11 days. With the coming eclipses, worked out in your browser.", "script": "eclipses.js"} -->
+<p class="kicker">Chapter iv</p>
+<h1>Eclipses</h1>
+<p class="lede">Every month the Moon passes between the Earth and the Sun, and every month it passes behind the Earth. Only now and then do they line up exactly, and when they do, they keep a calendar of their own.</p>
+
+<div class="prose">
+<p class="dropcap">An eclipse of the Sun needs a new moon, and an eclipse of the Moon needs a full moon. But not every new moon covers the Sun, because the Moon’s orbit is tilted about five degrees to the Earth’s.<sup><a href="#s1">1</a></sup> Most months the new moon passes a little above or below the Sun, and the full moon a little above or below the Earth’s shadow. The two orbits cross at two points, the <em>nodes</em>. An eclipse happens only when a new or full moon falls near one of them.</p>
+
+<p>The Sun appears to pass each node once a year, so there are two stretches a year, each lasting about five weeks, when any new or full moon is near enough to a node to be eclipsed. These are the <em>eclipse seasons</em>. Each holds two or three eclipses, and a year can hold as many as seven.<sup><a href="#s1">1</a></sup> The nodes slide slowly backwards round the orbit, so the seasons come a little early each year: every 173.31 days, not every half-year.</p>
+</div>
+
+<figure>
+  <svg class="chart" id="seasons" viewBox="0 0 720 280" role="img" aria-labelledby="seasons-cap"></svg>
+  <figcaption id="seasons-cap">The Moon’s distance above or below the ecliptic, in degrees, at each new moon (filled) and full moon (open) of the next three years. Phases near the zero line fall near a node. Those that make an eclipse are drawn in red, with S for the Sun and L for the Moon. They come in pairs and triples, about six months apart.</figcaption>
+</figure>
+
+<h2>The coming eclipses</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Date</th><th>Greatest (your time)</th><th>Eclipse</th><th class="r">Magnitude</th><th class="r">Saros</th></tr></thead>
+  <tbody id="coming"></tbody>
+</table></div>
+<p class="note">Computed with Meeus’s method for eclipses, which should give the moment of greatest eclipse to within a few minutes of the published time.<sup><a href="#s2">2</a></sup> For partial eclipses of the Sun the magnitude is the fraction of the Sun’s diameter covered at best. For eclipses of the Moon it is the fraction of the Moon’s diameter inside the Earth’s dark shadow, the umbra. It is more than 1 when the eclipse is total and less than 0 when the Moon only enters the faint outer shadow, the penumbra. The page cannot say where on Earth an eclipse of the Sun is seen: that needs the shadow’s track, which this chapter does not compute. An eclipse of the Moon is seen from wherever the Moon is up.</p>
+
+<h3 id="working-title">The next eclipse, worked out</h3>
+<figure>
+  <div class="table-wrap"><table class="working">
+    <thead><tr><th>Step</th><th>Rule</th><th class="r">Value</th></tr></thead>
+    <tbody id="working"></tbody>
+  </table></div>
+  <figcaption>Meeus’s chapter 54 in brief. <em>F</em> is the Moon’s angular distance from its ascending node. <em>γ</em> (gamma) is how far the shadow’s axis passes from the Earth’s centre, in Earth radii, positive to the north. <em>u</em> is the radius of the Moon’s dark shadow cone where it reaches the Earth. It is negative when the cone ends short of the Earth, which makes an eclipse of the Sun annular rather than total. The longer list of terms for the time is the same in kind as the one on the <a href="moon.html">Moon page</a>.</figcaption>
+</figure>
+
+<h2>The saros</h2>
+<div class="prose">
+<p>An eclipse depends on three of the Moon’s cycles at once. The new or full moon must fall near a node, which sets the <em>draconic</em> month, from node to node. Its distance, which decides whether an eclipse of the Sun is total or annular, follows the <em>anomalistic</em> month, from perigee to perigee. And the phase follows the <em>synodic</em> month. Chaldean astronomers in Babylon knew a span in which all three come back together, and Edmond Halley gave it its usual name, the <em>saros</em>, in 1686:<sup><a href="#s3">3</a></sup></p>
+</div>
+<figure>
+  <div class="table-wrap"><table class="working"><tbody id="saros"></tbody></table></div>
+  <figcaption>Whole numbers of each month, worked out from Meeus’s mean lengths. The draconic match is within an hour. The anomalistic match is within about five hours, close enough that eclipses a saros apart look alike.</figcaption>
+</figure>
+<div class="prose">
+<p>So an eclipse is followed, 6,585⅓ days later (18 years, 11 days and 8 hours, or 10 days if five leap days fall between), by one very like it. The extra third of a day turns the Earth a third of the way round, so the next eclipse of a family is seen about 120 degrees of longitude further west. After three saros, the <em>exeligmos</em> of 54 years and a month, it comes back near the same longitude. The match is not perfect. Each return falls a little further north or south, and a family, a <em>saros series</em>, enters at one edge of the Earth, crosses it, and leaves by the other, between 1,226 and 1,550 years later. Most series hold 71 or 72 eclipses.<sup><a href="#s3">3</a></sup> Series are numbered, and the numbers in the table above follow NASA’s.<sup><a href="#s4">4</a></sup></p>
+</div>
+
+<h3 id="family-title">The next eclipse and its family</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Saros back</th><th>Date</th><th>Eclipse</th><th class="r">γ</th></tr></thead>
+  <tbody id="family"></tbody>
+</table></div>
+<p class="note">Each row is 223 lunations from the next. Watch γ creep steadily one way: that is the series drifting across the Earth, pole to pole.</p>
+
+<h2>How far to trust it</h2>
+<div class="prose">
+<p>Meeus’s method is short, and it is meant for finding eclipses and their kind, not for planning an expedition. The site’s build checks it against every eclipse of the Sun and Moon NASA lists for 2021 to 2030.<sup><a href="#s4">4</a></sup> It finds every one except the eclipse of the Moon on 18 July 2027, which only grazes the penumbra so slightly that no eye could see it. It gets the kind of each one right, including the rare hybrid eclipse of 20 April 2023, which was annular at the ends of its track and total in the middle. It puts the moment of greatest eclipse within about a minute, and the magnitude within 0.01. A search far into the past or future would need a better value of ΔT, the slowly drifting difference between the Earth’s turning and a uniform clock.</p>
+</div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Eclipse_season">Eclipse season</a>”, for the tilt of the Moon’s orbit, the length and spacing of eclipse seasons and the most eclipses in a year.</li>
+  <li id="s2">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed. (Willmann-Bell, 1998), chapter 54, for the test near the node, the time of greatest eclipse, γ, u, the kinds of eclipse and the magnitudes; and chapter 49 for the mean phases and the lengths of the months.</li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Saros_(astronomy)">Saros (astronomy)</a>”, for the saros, the three months it unites, its westward step, and the size of a series.</li>
+  <li id="s4">Fred Espenak, NASA Goddard Space Flight Center, “<a href="https://eclipse.gsfc.nasa.gov/SEdecade/SEdecade2021.html">Solar eclipses: 2021–2030</a>” and “<a href="https://eclipse.gsfc.nasa.gov/LEdecade/LEdecade2021.html">Lunar eclipses: 2021–2030</a>”, for the saros numbering and to test the calculation.</li>
+</ol>
