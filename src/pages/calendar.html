@@ -1,0 +1,61 @@
+<!--meta {"title": "The Leap Year", "description": "Why the calendar adds a day in most fourth years but not in 1900 or 2100, how the equinox wanders inside the rule, and the 400-year cycle in which the Gregorian calendar repeats itself exactly. Worked out live in your browser.", "script": "calendar.js"} -->
+<p class="kicker">Chapter v</p>
+<h1>The Leap Year</h1>
+<p class="lede">The year of the seasons is not a whole number of days. A calendar that counts in whole days has to keep paying back the fraction, and the rule we use pays it back three times in every four hundred years less often than the old one did.</p>
+
+<div class="prose">
+<p class="dropcap">From one March equinox to the next takes, on average, about 365 days, 5 hours and 49 minutes: the mean tropical year is 365.24219 days.<sup><a href="#s2">2</a></sup> A calendar of 365 days falls behind the seasons by almost a quarter of a day each year, and in a century by more than three weeks. The Julian calendar, from 45 BC, mended this with one extra day every fourth year, for an average year of 365.25 days. That is eleven minutes too long, and the error builds to a whole day in about 128 years.<sup><a href="#s1">1</a></sup></p>
+<p>By the sixteenth century the equinox had crept back to 10 or 11 March, and with it the date of <a href="easter.html">Easter</a>, which is reckoned from 21 March. The reform issued by Pope Gregory XIII in 1582 did two things. It dropped ten days at once, so that Thursday 4 October 1582 was followed by Friday 15 October. And it made three century years in four into common years, so that 400 years hold 97 leap days instead of 100.<sup><a href="#s1">1</a></sup></p>
+</div>
+
+<div class="controls">
+  <label for="year">Year</label>
+  <input type="number" id="year" min="1" max="9999" step="1">
+  <span id="answer" class="big" aria-live="polite"></span>
+</div>
+<div class="table-wrap"><table class="working">
+  <thead><tr><th></th><th>Test</th><th class="r">Divides?</th></tr></thead>
+  <tbody id="steps"></tbody>
+</table></div>
+<p class="note" id="year-note"></p>
+
+<h2>How the equinox wanders</h2>
+<div class="prose">
+<p>The rule is right on average and wrong in every particular year. Each common year ends about six hours before the Sun has come all the way round, so the equinox arrives about six hours later by the calendar the next year. Each leap day pulls it back by a day. Over a century the four-year saw also slides earlier, because a leap day every fourth year is a little too much. The missing leap day of a century year then pushes everything a day later at once.</p>
+<p>The chart below finds the moment of the March equinox for every year from 1800 to 2200, in Universal Time, with the low-precision solar formula used on the front page. Its times are good to within about twenty minutes over these four centuries, which is much finer than the chart can show.<sup><a href="#s3">3</a></sup></p>
+</div>
+<figure>
+  <svg class="chart" id="drift" viewBox="0 0 720 300" role="img" aria-labelledby="drift-cap"></svg>
+  <figcaption id="drift-cap">Finding four hundred equinoxes…</figcaption>
+</figure>
+
+<h2>The cycle of four hundred years</h2>
+<div class="prose">
+<p>Four hundred Gregorian years hold 400 × 365 + 97 = <span class="num" id="days400">146,097</span> days, which is exactly <span class="num" id="weeks400">20,871</span> weeks.<sup><a href="#s1">1</a></sup> So the whole calendar, weekdays and all, repeats every four hundred years: 1 January 2401 will be the same weekday as 1 January 2001, and every date in between lines up the same way.</p>
+<p>Because the cycle is a whole number of weeks, its dates cannot fall evenly on the seven weekdays. Four hundred years have 4,800 months, and 4,800 is not a multiple of seven, so some weekdays get more thirteenths than others. The page counts them.</p>
+</div>
+<figure>
+  <svg class="chart" id="thirteen" viewBox="0 0 720 260" role="img" aria-labelledby="thirteen-cap"></svg>
+  <figcaption id="thirteen-cap">Counting the thirteenths…</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Look-ups</th><th class="r">Answer</th></tr></thead>
+  <tbody id="facts"></tbody>
+</table></div>
+
+<h2>Old Style and New</h2>
+<div class="prose">
+<p>The reform was a law of the Catholic Church, and other states took it up in their own time: Great Britain and its colonies in 1752, by which point the gap had grown to eleven days, and Russia and Greece in the twentieth century, when it was thirteen.<sup><a href="#s1">1</a></sup> The gap grows by a day in each century year that the Julian calendar keeps as leap and the Gregorian does not. From 1900 to 2100, a date kept by the Julian calendar, such as Christmas in churches that still follow it, falls thirteen days later by the Gregorian one: 25 December Old Style is 7 January New Style.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>From 1 March</th><th class="r">Julian behind Gregorian</th></tr></thead>
+  <tbody id="lag"></tbody>
+</table></div>
+<p class="note">Each figure is <code>b − ⌊b ÷ 4⌋ − 2</code>, where <code>b</code> is the century (the year divided by 100, rounded down). Its value for 1582 is the ten days the reform dropped.</p>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a>”, for the reform of 1582, the leap rule, the Julian error of a day in 128 years, the 146,097-day cycle of 20,871 weeks, and the dates of adoption in Britain, Russia and Greece.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Tropical_year">Tropical year</a>”, for the mean tropical year, after Meeus and Savoie (1992). The Gregorian year of 365.2425 days is too long by about a day in 3,030 years against it, or by a day in about 7,700 years against the interval between March equinoxes, 365.24237 days.<sup><a href="#s1">1</a></sup></li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Position_of_the_Sun">Position of the Sun</a>”, for the solar formula. Its error over 1800–2200 was found by comparing it with the mean equinox of Meeus’s <em>Astronomical Algorithms</em>, chapter 27.</li>
+</ol>

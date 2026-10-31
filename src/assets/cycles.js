@@ -361,6 +361,42 @@ export function easter(Y) {
   return new Date(Date.UTC(Y, s.month - 1, s.day));
 }
 
+// ---------- The calendar ----------
+// The Gregorian rule: every fourth year is leap, except century years,
+// except those divisible by 400. The Julian rule stops at the first test.
+export const isLeapGregorian = (Y) => (Y % 4 === 0 && Y % 100 !== 0) || Y % 400 === 0;
+export const isLeapJulian = (Y) => Y % 4 === 0;
+
+// Days the Julian calendar runs behind the Gregorian, for dates from
+// 1 March of year Y (the gap changes on Julian 29 February of century years).
+export function julianLag(Y) {
+  const b = Math.floor(Y / 100);
+  return b - Math.floor(b / 4) - 2;
+}
+
+// Day of the week (0 Sunday) of a Gregorian date, from the proleptic
+// calendar that JavaScript's Date uses.
+export const weekday = (Y, m, d) => {
+  const t = new Date(Date.UTC(2000, m - 1, d));
+  t.setUTCFullYear(Y);
+  return t.getUTCDay();
+};
+
+// How many times the 13th of a month falls on each weekday in one
+// 400-year Gregorian cycle (4,800 months).
+export function thirteenths(start = 2001) {
+  const n = [0, 0, 0, 0, 0, 0, 0];
+  for (let Y = start; Y < start + 400; Y++) for (let m = 1; m <= 12; m++) n[weekday(Y, m, 13)]++;
+  return n;
+}
+
+// The next year after Y whose calendar is the same, date for date:
+// the same weekday on 1 January and the same kind of year.
+export function sameCalendarAfter(Y) {
+  const w = weekday(Y, 1, 1), leap = isLeapGregorian(Y);
+  for (let y = Y + 1; ; y++) if (weekday(y, 1, 1) === w && isLeapGregorian(y) === leap) return y;
+}
+
 // ---------- Formatting ----------
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July",
   "August", "September", "October", "November", "December"];
