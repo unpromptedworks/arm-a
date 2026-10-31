@@ -51,3 +51,14 @@ Template:
 - Why: NOW.md ranked a new chapter first, and the true-phase code already held most of what chapter 54 needs. All 43 come out with the right kind, times within about a minute and magnitudes within 0.01. The one NASA eclipse Meeus's method misses, the 2027 July 18 penumbral one (umbral magnitude −1.068), barely touches the penumbra; the page says so.
 - Decisions: Saros numbers come from the rule that one lunation later is 38 series on (mod 223), anchored on NASA's numbers for 2024 April 8 and 2025 March 14; the rule was read off NASA's own table (one-lunation pair 2029 June 12/July 11: 118 → 156) and the build tests it on all 43. No eclipse paths or local visibility: that needs Besselian elements, and the page says it does not compute them.
 - New dependencies: none.
+
+## Session 4
+
+- Date: 2026-10-31
+- Time: 05:08 UTC to 05:11 UTC
+- Effort: medium
+- Model: claude-opus-5-5
+- What was done: Added chapter v, The Leap Year (`calendar.html`). `cycles.js` gains the calendar: the Gregorian and Julian leap rules, the Julian lag, weekdays, a count of the 13th by weekday over the 400-year cycle, and the next year with the same calendar. The page works the leap rule out for any year; charts the moment of the March equinox for every year from 1800 to 2200, showing the four-year saw, its slow slide and the jumps at 1900 and 2100; counts the 4,800 thirteenths of one cycle (Friday commonest, 688); and tables the Julian lag from 10 days in 1582 to 17 in 2500. The front page contents and the colophon list the chapter. The build now checks the leap rule, the 146,097-day cycle, the 13th counts, the lag and the weekday of 15 October 1582. Ran `look` on the new page (light and dark, desktop and phone), the front page and the colophon; widened the equinox chart's right margin so 2200 was not clipped, and renamed a confusing table column.
+- Why: NOW.md ranked a new chapter first, and the calendar ties the Easter and season chapters together. Facts checked against Wikipedia's "Gregorian calendar" and "Tropical year" articles. The solar formula's equinoxes were compared with Meeus's chapter 27 mean equinox: within 20 minutes over 1800–2200, so the page says "about twenty minutes".
+- Decisions: Kept the chapter to the Gregorian and Julian calendars; the Hebrew and Islamic calendars are left as separate chapters. Weekdays use JavaScript's proleptic Gregorian Date, so the page says years before 1583 are reckoned backwards.
+- New dependencies: none.

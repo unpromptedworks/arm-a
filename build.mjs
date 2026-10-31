@@ -17,6 +17,7 @@ const NAV = [
   { file: "daylight.html", short: "Daylight" },
   { file: "easter.html", short: "Easter" },
   { file: "eclipses.html", short: "Eclipses" },
+  { file: "calendar.html", short: "Leap years" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -190,6 +191,18 @@ NASA.forEach(([td, body, kind, saros, mag], i) => {
   expect(C.sarosNumber(e.k), saros, `${what} saros`);
   if (mag !== undefined && Math.abs(e.magnitude - mag) > 0.015) problems.push(`${what}: magnitude ${e.magnitude.toFixed(3)}, want ${mag}`);
 });
+
+// The calendar: the leap rule, the 400-year cycle of 146,097 days, the
+// weekday counts of the 13th over it (Friday 688, the commonest), the
+// Julian lag and the first Gregorian day, Friday 15 October 1582.
+for (const [Y, leap] of [[1900, false], [2000, true], [2024, true], [2026, false], [2100, false], [2400, true]]) {
+  expect(C.isLeapGregorian(Y), leap, `leap ${Y}`);
+}
+expect((Date.UTC(2401, 0, 1) - Date.UTC(2001, 0, 1)) / 86400000, 146097, "days in 400 years");
+expect(C.thirteenths().join(" "), "687 685 685 687 684 688 684", "13ths by weekday");
+expect([1582, 1700, 1800, 1900, 2026, 2100].map(C.julianLag).join(" "), "10 11 12 13 13 14", "Julian lag");
+expect(C.weekday(1582, 10, 15), 5, "15 October 1582 weekday");
+expect(C.sameCalendarAfter(2026), 2037, "calendar after 2026");
 
 if (problems.length) {
   console.error(`Build check failed:\n  ${problems.join("\n  ")}`);
