@@ -1,0 +1,68 @@
+<!--meta {"title": "The Hebrew Year", "description": "How the Hebrew calendar keeps months that follow the Moon inside years that follow the Sun: the molad, the nineteen-year cycle of leap months, and the four rules that set the new year. Worked out live in your browser.", "script": "hebrew.js"} -->
+<p class="kicker">Chapter vi</p>
+<h1>The Hebrew Year</h1>
+<p class="lede">A calendar whose months begin with the new Moon and whose festivals must keep to their seasons. It does both by counting in parts of an hour and adding a whole month seven times in every nineteen years.</p>
+
+<div class="prose">
+<p class="dropcap">The Hebrew calendar is lunisolar. Its months are of 29 or 30 days and follow the Moon; its years are of twelve or thirteen months and follow the Sun, so that Passover always comes in spring.<sup><a href="#s1">1</a></sup> Twelve lunar months make about 354 days, eleven short of the solar year, and left alone the festivals would slide backwards through the seasons. The fixed calendar, in use since about the fourth century, mends this with the cycle described in the <a href="moon.html">Moon chapter</a>: 235 months come to almost exactly 19 years. Twelve of every nineteen years have twelve months, and seven have a thirteenth, a second month of Adar.<sup><a href="#s1">1</a></sup></p>
+<p>Nothing in the fixed calendar is observed. Each month is reckoned from the <em>molad</em>, a mean new moon that moves on by the same interval every time, and each year from the molad of its first month, Tishri, with four small rules that decide which day the new year, Rosh Hashanah, may fall on.</p>
+</div>
+
+<h2>The molad</h2>
+<div class="prose">
+<p>The hour is divided into 1,080 parts, each of 3⅓ seconds, and the molad interval is 29 days, 12 hours and 793 parts.<sup><a href="#s1">1</a></sup> That is <span class="num" id="interval"></span> days, against <span class="num" id="synodic"></span> days for the mean synodic month today.<sup><a href="#s3">3</a></sup> The difference is <span class="num" id="diff"></span> a month. Over the sixteen centuries since the calendar was fixed it has carried the molad behind the mean new moon; it now falls, on average, a little over two hours late.<sup><a href="#s2">2</a></sup> The true new moon wanders much more, as the Moon chapter shows: the table puts each coming molad beside the true new moon of the same month.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Month</th><th>Molad, Jerusalem time</th><th>True new moon</th><th class="r">Molad later by</th></tr></thead>
+  <tbody id="molads"></tbody>
+</table></div>
+<p class="note">Jerusalem time here is the mean solar time of Jerusalem, about 2 hours 21 minutes ahead of Universal Time, in which the molad is reckoned.<sup><a href="#s2">2</a></sup> The Hebrew day begins at 6 pm the evening before, so a molad given as “Monday, 5 hours” falls at 11 pm on Sunday.</p>
+
+<h2>Nineteen years</h2>
+<div class="prose">
+<p>The leap years are the 3rd, 6th, 8th, 11th, 14th, 17th and 19th of each cycle.<sup><a href="#s1">1</a></sup> Spread out like this, they hold the first day of Passover inside one month of spring: from 1900 to 2100 it never falls before 26 March or after 25 April. A short test gives the same years: year <code>Y</code> is leap when <code>(7Y + 1) mod 19</code> is less than 7.</p>
+</div>
+<div class="cycle" id="cycle" aria-label="The nineteen years of the current cycle"></div>
+<p class="note" id="cycle-note"></p>
+
+<h2>Setting the new year</h2>
+<div class="prose">
+<p>Rosh Hashanah falls on the day of the molad of Tishri, unless one of four rules moves it.<sup><a href="#s1">1</a></sup> If the molad is at or after noon, the new year waits for the next day (<em>molad zaken</em>, an old molad). It may never fall on a Sunday, Wednesday or Friday (<em>lo ADU Rosh</em>), so that the Day of Atonement does not touch a Sabbath and the seventh day of the festival of Sukkot is not a Sabbath. And two rarer rules, known by the letters of their weekdays and times, stop a year from coming out too long or too short: a year may have 353, 354 or 355 days, or in leap years 383, 384 or 385, and no other length.<sup><a href="#s1">1</a></sup></p>
+</div>
+<div class="controls">
+  <label for="year">Hebrew year</label>
+  <input type="number" id="year" min="2" max="9999" step="1">
+  <span id="answer" class="big" aria-live="polite"></span>
+</div>
+<div class="table-wrap"><table class="working">
+  <thead><tr><th>Step</th><th>Test</th><th class="r">Days</th></tr></thead>
+  <tbody id="steps"></tbody>
+</table></div>
+<p class="note" id="year-note"></p>
+
+<h2>The slow drift</h2>
+<div class="prose">
+<p>Nineteen years of the fixed calendar take <span class="num" id="cycle-days"></span> days, so its mean year is <span class="num" id="mean-year"></span> days. The Gregorian year is <span class="num">365.2425</span> days. The Hebrew year is the longer by <span class="num" id="excess"></span> days, and its festivals arrive a day later by the Gregorian calendar every <span class="num" id="per-day"></span> years or so. Against the seasons themselves the drift is about a day in 216 years.<sup><a href="#s1">1</a></sup> The chart shows it on the first day of Passover, 15 Nisan, over four centuries: inside each nineteen-year cycle the date leaps by a month and falls back, so the dots scatter over a whole month, while their average over each cycle creeps slowly later.</p>
+</div>
+<figure>
+  <svg class="chart" id="drift" viewBox="0 0 720 300" role="img" aria-labelledby="drift-cap"></svg>
+  <figcaption id="drift-cap">Finding four hundred Passovers…</figcaption>
+</figure>
+
+<h2>Passover and Easter</h2>
+<div class="prose">
+<p>Both feasts are tied to the first full moon of spring, and both are found by arithmetic rather than by looking at the sky. They are reckoned differently: Passover by the molad and the nineteen-year cycle above, Western Easter by the Gregorian church tables of the <a href="easter.html">Easter chapter</a>. Most years Easter falls within a week of Passover. In some, when the two calendars place their leap month differently, Easter comes about a month earlier.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Year</th><th>Passover (15 Nisan)</th><th>Easter (Western)</th><th class="r">Easter later by</th></tr></thead>
+  <tbody id="feasts"></tbody>
+</table></div>
+<p class="note">Years in red are those in which Easter comes about a month before Passover. The date given for each festival is its first full day; Hebrew days, and so Passover, begin at sunset the evening before.</p>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Hebrew_calendar">Hebrew calendar</a>”, for the months and years, the parts and the molad interval, the leap years of the cycle, the postponement rules and their reasons, the six lengths of year, the fixing of the calendar in the fourth century, and the drift of a day in about 216 years against the tropical year.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Molad">Molad</a>”, for the epoch (day 2, 5 hours, 204 parts), Jerusalem mean time, and the molad’s lateness of about two hours against the mean conjunction.</li>
+  <li id="s3">Jean Meeus, <em>Astronomical Algorithms</em>, chapter 49, for the mean synodic month and the true new moons, as used in the <a href="moon.html">Moon chapter</a>.</li>
+</ol>
+<p class="note">The day count follows the arithmetic of the fixed calendar as set out in those articles. The build checks it against the dates of Rosh Hashanah and Passover for recent years.</p>
