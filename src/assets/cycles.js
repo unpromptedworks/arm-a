@@ -433,3 +433,68 @@ export function savedLatitude(fallback = 51.5) {
 export function saveLatitude(v) {
   try { localStorage.setItem("latitude", String(v)); } catch (_) { /* ignore */ }
 }
+
+// ---------- The Hebrew calendar ----------
+// The fixed (arithmetic) Hebrew calendar. Time is counted in parts:
+// 1,080 to the hour, 25,920 to the day. The mean lunation, the molad
+// interval, is 29 days 12 hours 793 parts. Hebrew days run from 6 pm
+// to 6 pm, local time in Jerusalem. Day numbers D used here count from
+// the Sunday before the epoch, so D mod 7 is the weekday (0 = Sunday)
+// and day D = 1 is Monday 7 October 3761 BC (proleptic Julian), the
+// day of the first molad, "molad tohu": day 2, 5 hours, 204 parts.
+export const PARTS_HOUR = 1080, PARTS_DAY = 25920;
+export const MOLAD_INTERVAL = 29 * PARTS_DAY + 12 * PARTS_HOUR + 793; // 765,433 parts
+const MOLAD_TOHU = 1 * PARTS_DAY + 5 * PARTS_HOUR + 204; // parts from the start of day 0
+const HEB_EPOCH_RD = 1373428; // D minus this is the Rata Die day number (RD 1 = 1 January AD 1, Gregorian)
+const RD_1970 = 719163; // Rata Die of 1 January 1970
+const JERUSALEM_MS = (2 * 60 + 21) * 60000; // mean solar time in Jerusalem, about UT + 2 h 21 min
+
+export const isLeapHebrew = (Y) => (7 * Y + 1) % 19 < 7; // years 3, 6, 8, 11, 14, 17, 19 of the cycle
+export const hebrewCycleYear = (Y) => ((Y - 1) % 19) + 1;
+export const monthsBeforeYear = (Y) => Math.floor((235 * Y - 234) / 19);
+
+// The molad of the n-th month since the epoch: day number and parts.
+export function molad(n) {
+  const p = MOLAD_TOHU + n * MOLAD_INTERVAL;
+  return { day: Math.floor(p / PARTS_DAY), parts: p % PARTS_DAY };
+}
+// The molad as a moment, in UT. Day D begins at 6 pm the evening before.
+export function moladDate(n) {
+  const { day, parts } = molad(n);
+  const civil = (day - HEB_EPOCH_RD - RD_1970) * DAY_MS;
+  return new Date(civil - 6 * 3600000 + (parts / PARTS_DAY) * DAY_MS - JERUSALEM_MS);
+}
+
+// Rosh Hashanah of year Y: the molad of Tishri and the four
+// postponements (dehiyyot), each with whether it applied.
+export function roshHashanahSteps(Y) {
+  const m = molad(monthsBeforeYear(Y));
+  let D = m.day;
+  const dow = D % 7, p = m.parts, leap = isLeapHebrew(Y), prevLeap = isLeapHebrew(Y - 1);
+  const steps = [];
+  const zaken = p >= 18 * PARTS_HOUR;
+  steps.push({ rule: "molad zaken", test: "molad at or after noon (18 h)", applies: zaken, add: zaken ? 1 : 0 });
+  const gatarad = !leap && dow === 2 && p >= 9 * PARTS_HOUR + 204;
+  steps.push({ rule: "GaTaRaD", test: "common year, molad on Tuesday at or after 9 h 204 p", applies: gatarad, add: gatarad ? 2 : 0 });
+  const betutakpat = prevLeap && dow === 1 && p >= 15 * PARTS_HOUR + 589;
+  steps.push({ rule: "BeTUTaKPaT", test: "after a leap year, molad on Monday at or after 15 h 589 p", applies: betutakpat, add: betutakpat ? 1 : 0 });
+  if (zaken) D += 1;
+  else if (gatarad) D += 2;
+  else if (betutakpat) D += 1;
+  const adu = [0, 3, 5].includes(D % 7);
+  steps.push({ rule: "lo ADU Rosh", test: "not on Sunday, Wednesday or Friday", applies: adu, add: adu ? 1 : 0 });
+  if (adu) D += 1;
+  return { molad: m, leap, prevLeap, steps, day: D };
+}
+const hebDayToDate = (D) => new Date((D - HEB_EPOCH_RD - RD_1970) * DAY_MS);
+export const roshHashanahDay = (Y) => roshHashanahSteps(Y).day;
+export const roshHashanah = (Y) => hebDayToDate(roshHashanahDay(Y)); // 1 Tishri, UTC midnight of its daytime
+export const hebrewYearLength = (Y) => roshHashanahDay(Y + 1) - roshHashanahDay(Y);
+// 15 Nisan of year Y always falls 163 days before the next 1 Tishri:
+// Nisan to Elul is fixed at 30 + 29 + 30 + 29 + 30 + 29 = 177 days.
+export const passover = (Y) => hebDayToDate(roshHashanahDay(Y + 1) - 163);
+export function hebrewYearOf(date) {
+  let Y = date.getUTCFullYear() + 3761;
+  while (roshHashanah(Y) > date) Y--;
+  return Y;
+}

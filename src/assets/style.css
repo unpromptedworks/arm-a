@@ -168,3 +168,11 @@ svg.chart .dot.ink { fill: var(--ink); }
 svg.chart .dot.open { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
 svg.chart .dot.open.hit { stroke: var(--rubric); stroke-width: 2; fill: var(--paper); }
 svg.chart text.tag { fill: var(--rubric); font-size: 11px; font-variant: small-caps; }
+
+/* The nineteen-year cycle (Hebrew year chapter) */
+.cycle { display: grid; grid-template-columns: repeat(19, 1fr); gap: 3px; margin: 1rem 0 0.4rem; max-width: 44rem; }
+.cycle span { border: 1px solid var(--rule); text-align: center; padding: 0.45rem 0 0.35rem; font-size: 0.95rem; font-variant-numeric: lining-nums tabular-nums; }
+.cycle span.leap { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.cycle span.now { outline: 2px solid var(--rubric); outline-offset: 1px; }
+@media (max-width: 34rem) { .cycle { grid-template-columns: repeat(10, 1fr); } }
+svg.chart .pt { fill: var(--ink); }

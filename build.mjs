@@ -18,6 +18,7 @@ const NAV = [
   { file: "easter.html", short: "Easter" },
   { file: "eclipses.html", short: "Eclipses" },
   { file: "calendar.html", short: "Leap years" },
+  { file: "hebrew.html", short: "Hebrew year" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -203,6 +204,25 @@ expect(C.thirteenths().join(" "), "687 685 685 687 684 688 684", "13ths by weekd
 expect([1582, 1700, 1800, 1900, 2026, 2100].map(C.julianLag).join(" "), "10 11 12 13 13 14", "Julian lag");
 expect(C.weekday(1582, 10, 15), 5, "15 October 1582 weekday");
 expect(C.sameCalendarAfter(2026), 2037, "calendar after 2026");
+
+// The Hebrew calendar: the molad tohu (Sunday 6 October 3761 BC Julian,
+// 23:11:20 Jerusalem, so 20:50:20 UT on 6 September proleptic
+// Gregorian), the leap years of the cycle, and published dates of
+// Rosh Hashanah and of the first day of Passover.
+expect(C.moladDate(0).toISOString(), "-003760-09-06T20:50:20.000Z", "molad tohu");
+expect([...Array(19)].map((_, i) => i + 1).filter((c) => C.isLeapHebrew(5776 + c)).join(" "), "3 6 8 11 14 17 19", "Hebrew leap years");
+for (const [Y, rh, pes, len] of [[5784, "2023-09-16", "2024-04-23", 383], [5785, "2024-10-03", "2025-04-13", 355],
+  [5786, "2025-09-23", "2026-04-02", 354], [5787, "2026-09-12", "2027-04-22", 385], [5788, "2027-10-02", "2028-04-11", 355]]) {
+  expect(iso(C.roshHashanah(Y)), rh, `Rosh Hashanah ${Y}`);
+  expect(iso(C.passover(Y)), pes, `Passover ${Y}`);
+  expect(C.hebrewYearLength(Y), len, `length of ${Y}`);
+}
+const lengths = new Set();
+for (let Y = 5000; Y < 6000; Y++) lengths.add(C.hebrewYearLength(Y));
+expect([...lengths].sort().join(" "), "353 354 355 383 384 385", "Hebrew year lengths");
+const pesachSpan = [];
+for (let G = 1900; G <= 2100; G++) pesachSpan.push(iso(C.passover(G + 3760)).slice(5));
+expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover span 1900-2100");
 
 if (problems.length) {
   console.error(`Build check failed:\n  ${problems.join("\n  ")}`);
