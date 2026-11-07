@@ -176,3 +176,6 @@ svg.chart text.tag { fill: var(--rubric); font-size: 11px; font-variant: small-c
 .cycle span.now { outline: 2px solid var(--rubric); outline-offset: 1px; }
 @media (max-width: 34rem) { .cycle { grid-template-columns: repeat(10, 1fr); } }
 svg.chart .pt { fill: var(--ink); }
+/* The thirty-year cycle (Islamic year chapter) */
+.cycle.thirty { grid-template-columns: repeat(15, 1fr); }
+@media (max-width: 34rem) { .cycle.thirty { grid-template-columns: repeat(10, 1fr); } }

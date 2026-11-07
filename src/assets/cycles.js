@@ -498,3 +498,35 @@ export function hebrewYearOf(date) {
   while (roshHashanah(Y) > date) Y--;
   return Y;
 }
+
+// ---------- The Islamic calendar ----------
+// The tabular (arithmetic) Islamic calendar: twelve months alternately
+// of 30 and 29 days, with a 30th day added to the last month, Dhu
+// al-Hijja, in years 2, 5, 7, 10, 13, 16, 18, 21, 24, 26 and 29 of each
+// thirty. The epoch is the civil one, 1 Muharram AH 1 = Friday 16 July
+// 622 (Julian), Rata Die 227,015 (Reingold and Dershowitz,
+// Calendrical Calculations). Observed and Umm al-Qura dates can differ
+// from it by a day or two.
+const ISLAMIC_EPOCH_RD = 227015;
+export const ISLAMIC_MONTHS = ["Muharram", "Safar", "Rabi‘ al-Awwal", "Rabi‘ al-Thani", "Jumada al-Ula", "Jumada al-Akhira",
+  "Rajab", "Sha‘ban", "Ramadan", "Shawwal", "Dhu al-Qa‘da", "Dhu al-Hijja"];
+export const ISLAMIC_CYCLE_DAYS = 30 * 354 + 11; // 10,631
+export const isLeapIslamic = (Y) => (((14 + 11 * Y) % 30) + 30) % 30 < 11;
+export const islamicCycleYear = (Y) => ((((Y - 1) % 30) + 30) % 30) + 1;
+export const islamicMonthLength = (Y, m) => (m % 2 === 1 || (m === 12 && isLeapIslamic(Y)) ? 30 : 29);
+export const islamicYearLength = (Y) => (isLeapIslamic(Y) ? 355 : 354);
+// Rata Die of day d of month m of year Y.
+export function islamicRD(Y, m, d) {
+  return ISLAMIC_EPOCH_RD - 1 + (Y - 1) * 354 + Math.floor((3 + 11 * Y) / 30) + 29 * (m - 1) + Math.floor((6 * m - 1) / 11) + d;
+}
+export const rdToDate = (rd) => new Date((rd - RD_1970) * DAY_MS); // UTC midnight
+export const dateToRD = (date) => Math.floor(date.getTime() / DAY_MS) + RD_1970; // by its UTC day
+export const islamicToDate = (Y, m, d) => rdToDate(islamicRD(Y, m, d));
+// The tabular Islamic date of the UTC day of a moment, with the working.
+export function islamicFromDate(date) {
+  const rd = dateToRD(date), days = rd - ISLAMIC_EPOCH_RD; // whole days since 1 Muharram 1
+  const Y = Math.floor((30 * days + 10646) / 10631);
+  const m = Math.min(12, Math.ceil((rd - 29 - islamicRD(Y, 1, 1)) / 29.5) + 1);
+  const d = rd - islamicRD(Y, m, 1) + 1;
+  return { year: Y, month: m, day: d, days, cycles: Math.floor(days / ISLAMIC_CYCLE_DAYS), rest: ((days % ISLAMIC_CYCLE_DAYS) + ISLAMIC_CYCLE_DAYS) % ISLAMIC_CYCLE_DAYS };
+}
