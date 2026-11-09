@@ -19,6 +19,7 @@ const NAV = [
   { file: "eclipses.html", short: "Eclipses" },
   { file: "calendar.html", short: "Leap years" },
   { file: "hebrew.html", short: "Hebrew year" },
+  { file: "islamic.html", short: "Islamic year" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -223,6 +224,27 @@ expect([...lengths].sort().join(" "), "353 354 355 383 384 385", "Hebrew year le
 const pesachSpan = [];
 for (let G = 1900; G <= 2100; G++) pesachSpan.push(iso(C.passover(G + 3760)).slice(5));
 expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover span 1900-2100");
+
+// The Islamic calendar: the tabular rule against the islamic-civil
+// calendar of the ICU library built into Node, every 3 days from 622 to
+// 2600; the leap years of the cycle; and the thirty years' 10,631 days.
+{
+  const f = new Intl.DateTimeFormat("en-u-ca-islamic-civil", { timeZone: "UTC", year: "numeric", month: "numeric", day: "numeric" });
+  if (f.resolvedOptions().calendar !== "islamic-civil") problems.push("Node lacks the islamic-civil calendar to check against");
+  else {
+    let bad = 0;
+    for (let rd = C.islamicRD(1, 1, 1); rd < C.dateToRD(new Date(Date.UTC(2600, 0, 1))); rd += 3) {
+      const d = C.rdToDate(rd), h = C.islamicFromDate(d), p = Object.fromEntries(f.formatToParts(d).map((x) => [x.type, x.value]));
+      if (`${h.year} ${h.month} ${h.day}` !== `${parseInt(p.year, 10)} ${p.month} ${p.day}`) bad++;
+      if (C.islamicRD(h.year, h.month, h.day) !== rd) bad++;
+    }
+    expect(bad, 0, "tabular Islamic dates disagreeing with ICU islamic-civil");
+  }
+  expect(C.islamicToDate(1, 1, 1).toISOString().slice(0, 10), "0622-07-19", "1 Muharram AH 1 (proleptic Gregorian)");
+  expect([...Array(30)].map((_, i) => i + 1).filter(C.isLeapIslamic).join(" "), "2 5 7 10 13 16 18 21 24 26 29", "Islamic leap years");
+  expect(C.islamicRD(1471, 1, 1) - C.islamicRD(1441, 1, 1), 10631, "days in thirty Islamic years");
+  expect(iso(C.islamicToDate(1447, 9, 1)), "2026-02-18", "1 Ramadan 1447 (tabular)");
+}
 
 if (problems.length) {
   console.error(`Build check failed:\n  ${problems.join("\n  ")}`);

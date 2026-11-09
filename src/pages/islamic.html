@@ -1,0 +1,84 @@
+<!--meta {"title": "The Islamic Year", "description": "A calendar of twelve Moons and nothing else: how the Islamic year runs eleven days short of the Sun, the thirty-year cycle of the tabular calendar, and Ramadan's journey through every season in about 33 years. Worked out live in your browser.", "script": "islamic.js"} -->
+<p class="kicker">Chapter vii</p>
+<h1>The Islamic Year</h1>
+<p class="lede">Twelve Moons, and no correction for the Sun. The Islamic year lets its months run freely through the seasons, so that every feast in it visits winter and summer in turn.</p>
+
+<div class="prose">
+<p class="dropcap">The Islamic, or Hijri, calendar has twelve lunar months and a year of 354 or 355 days.<sup><a href="#s1">1</a></sup> Its era begins with the new year of AD 622, the year of Muhammad’s migration from Mecca to Medina, the Hijra.<sup><a href="#s1">1</a></sup> Unlike the <a href="hebrew.html">Hebrew calendar</a>, it adds no thirteenth month to keep step with the Sun: intercalation was forbidden in the tenth year of the Hijra, a prohibition Muslims take from the Qur’an, 9:36–37.<sup><a href="#s1">1</a></sup> So each date comes about eleven days earlier by the solar calendar than it did the year before.</p>
+<p>Traditionally a month begins when the new crescent, the <em>hilal</em>, is first seen after sunset; if it is not seen on the evening of the 29th, the month runs to 30 days.<sup><a href="#s1">1</a></sup> Saudi Arabia’s Umm al-Qura calendar instead begins a month when, on the evening of the 29th, the conjunction has come before sunset and the Moon sets after the Sun at Mecca.<sup><a href="#s1">1</a></sup> This page uses a third form, the <em>tabular</em> calendar, which needs neither sky nor site: a fixed rule of month lengths in a thirty-year cycle. Historians use it to convert dates, and it can be a day or two early or late against the observed months.<sup><a href="#s2">2</a></sup></p>
+</div>
+
+<div class="controls">
+  <span class="big" id="today-hijri" aria-live="polite">…</span>
+</div>
+<p class="note" id="today-note"></p>
+
+<h2>Twelve Moons</h2>
+<div class="prose">
+<p>The months are 30 and 29 days long by turns, beginning with Muharram at 30. In leap years the last month, Dhu al-Hijja, has a 30th day.<sup><a href="#s2">2</a></sup> Twelve such months make 354 days, and twelve mean lunations <span class="num" id="twelve"></span>. The table sets each month of this year beside the true new moon, the conjunction, from the <a href="moon.html">Moon chapter</a>. The crescent cannot usually be seen until a day or so after the conjunction, and the first day of a month here falls, as it should, mostly one or two days after it.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Month</th><th class="r">Days</th><th>First day</th><th>New moon, UT</th><th class="r">Days after</th></tr></thead>
+  <tbody id="months"></tbody>
+</table></div>
+<p class="note" id="months-note"></p>
+
+<h2>Thirty years</h2>
+<div class="prose">
+<p>The tabular calendar adds its leap day in years 2, 5, 7, 10, 13, 16, 18, 21, 24, 26 and 29 of each thirty, eleven in all, so that thirty years hold 10,631 days.<sup><a href="#s2">2</a></sup> A short test gives the same years: year <code>Y</code> is leap when <code>(14 + 11Y) mod 30</code> is less than 11. The thirty years hold 360 months, so the tabular month is 10,631 ÷ 360 = <span class="num" id="tab-month"></span> days, against <span class="num" id="syn-month"></span> for the mean synodic month.<sup><a href="#s3">3</a></sup> It is short by <span class="num" id="short"></span> a month, and falls a whole day behind the mean Moon only once in about <span class="num" id="per-day"></span> years.</p>
+</div>
+<div class="cycle thirty" id="cycle" aria-label="The thirty years of the current cycle"></div>
+<p class="note" id="cycle-note"></p>
+
+<h3>Any date, by the table</h3>
+<div class="controls">
+  <label for="when">Date</label>
+  <input type="date" id="when" min="0622-07-19" max="9999-12-31">
+  <span id="answer" class="big" aria-live="polite"></span>
+</div>
+<div class="table-wrap"><table class="working">
+  <thead><tr><th>Step</th><th>Working</th><th class="r">Result</th></tr></thead>
+  <tbody id="steps"></tbody>
+</table></div>
+<p class="note">The epoch is the civil one: 1 Muharram AH 1 was Friday 16 July 622 by the Julian calendar, 19 July by the Gregorian reckoned backwards.<sup><a href="#s4">4</a></sup> Some astronomical tables count from the day before. The Islamic day begins at sunset, so the date shown is the one that is current in daylight.</p>
+
+<h2>Through the seasons</h2>
+<div class="prose">
+<p>The tabular year is <span class="num" id="mean-year"></span> days long on average, <span class="num" id="gap"></span> days short of the Gregorian year. A month therefore moves backwards through the solar calendar, coming round to the same season after <span class="num" id="circuit-g"></span> Gregorian years, which are <span class="num" id="circuit-h"></span> Islamic ones: the “about 33 years” of the usual account.<sup><a href="#s1">1</a></sup> The chart follows the first day of Ramadan, the month of fasting, from 1950 to 2100. Each dot is one year; each diagonal is one passage from December back to January.</p>
+</div>
+<figure>
+  <svg class="chart" id="drift" viewBox="0 0 720 320" role="img" aria-labelledby="drift-cap"></svg>
+  <figcaption id="drift-cap">Finding a hundred and fifty Ramadans…</figcaption>
+</figure>
+
+<div class="prose">
+<p>The fast of Ramadan is kept from dawn to sunset, so the season it falls in sets its length. Near the equator that matters little. Far from it, a summer Ramadan has days hours longer than a winter one, and in seventy years the fast comes round through every season twice. The next chart gives the mean hours between sunrise and sunset through each Ramadan at the latitude set on the <a href="daylight.html">Daylight page</a>; the fast itself, which begins at first light, is longer still.</p>
+</div>
+<figure>
+  <svg class="chart" id="fast" viewBox="0 0 720 260" role="img" aria-labelledby="fast-cap"></svg>
+  <figcaption id="fast-cap"></figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Year</th><th>1 Ramadan</th><th>Umm al-Qura</th><th>1 Shawwal</th><th class="r">Daylight</th></tr></thead>
+  <tbody id="ramadans"></tbody>
+</table></div>
+<p class="note" id="ramadan-note"></p>
+
+<h2>Two clocks, one race</h2>
+<div class="prose">
+<p>Because its year is shorter, the Islamic count gains on the Christian one, about <span class="num" id="gain"></span> of a year every year. Every thirty-three years or so a Gregorian year holds two Islamic new years, one in early January and the next in late December. And far ahead the two numbers meet: by the tabular calendar, the Islamic year first carries the same number as the Gregorian year in which it begins in <span class="num" id="meet"></span>.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Gregorian year</th><th>First new year</th><th>Second new year</th></tr></thead>
+  <tbody id="doubles"></tbody>
+</table></div>
+<p class="note">Found by counting through the tabular calendar; an observed calendar may move a new year by a day across the turn of the Gregorian year.</p>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Islamic_calendar">Islamic calendar</a>”, for the twelve lunar months and the year of 354 or 355 days, the era of the Hijra, the prohibition of intercalation, the sighting of the crescent, the Umm al-Qura rule, the month names and the regression through the seasons in about 33 years.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Tabular_Islamic_calendar">Tabular Islamic calendar</a>”, for the month lengths, the eleven leap years of the thirty-year cycle, its 10,631 days, its use by historians, and its difference of a day or two from observed calendars.</li>
+  <li id="s3">Jean Meeus, <em>Astronomical Algorithms</em>, chapter 49, for the mean synodic month and the true new moons, as used in the <a href="moon.html">Moon chapter</a>.</li>
+  <li id="s4">Edward M. Reingold and Nachum Dershowitz, <em>Calendrical Calculations</em>, for the civil epoch and the day-count arithmetic. The build checks every tabular date from 622 to 2600 against the <code>islamic-civil</code> calendar of the Unicode ICU library.</li>
+</ol>
+<p class="note">The Umm al-Qura column is not computed on this page: it is read from your browser’s own copy of that calendar, if it has one. Mean daylight is from sunrise to sunset, with a flat horizon, as on the Daylight page.</p>
