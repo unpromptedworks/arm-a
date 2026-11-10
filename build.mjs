@@ -20,6 +20,7 @@ const NAV = [
   { file: "calendar.html", short: "Leap years" },
   { file: "hebrew.html", short: "Hebrew year" },
   { file: "islamic.html", short: "Islamic year" },
+  { file: "week.html", short: "The week" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -244,6 +245,35 @@ expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover 
   expect([...Array(30)].map((_, i) => i + 1).filter(C.isLeapIslamic).join(" "), "2 5 7 10 13 16 18 21 24 26 29", "Islamic leap years");
   expect(C.islamicRD(1471, 1, 1) - C.islamicRD(1441, 1, 1), 10631, "days in thirty Islamic years");
   expect(iso(C.islamicToDate(1447, 9, 1)), "2026-02-18", "1 Ramadan 1447 (tabular)");
+}
+
+// The week: Conway's Doomsday rule and the Julian Day Number against
+// JavaScript's Date for every day from 1583 to 2999; ISO weeks against
+// Node's own week numbering of dates; the 71 years of 53 ISO weeks in
+// 400; the British change of 1752 (Wednesday 2 September, then Thursday
+// 14 September by the Gregorian count); and the planetary hours, which
+// must give the days in the order Saturn, Sun, Moon, Mars, Mercury,
+// Jupiter, Venus.
+{
+  let bad = 0;
+  for (let t = Date.UTC(1583, 0, 1); t < Date.UTC(3000, 0, 1); t += 86400000) {
+    const d = new Date(t), Y = d.getUTCFullYear(), m = d.getUTCMonth() + 1, day = d.getUTCDate();
+    if (C.doomsdaySteps(Y, m, day).dow !== d.getUTCDay()) bad++;
+    if ((C.julianDayNumber(Y, m, day) + 1) % 7 !== d.getUTCDay()) bad++;
+  }
+  expect(bad, 0, "Doomsday or Julian Day weekdays disagreeing with Date");
+  expect(C.julianDayNumber(2000, 1, 1), 2451545, "JDN of 1 January 2000");
+  expect(C.weekday(1582, 10, 14), 4, "Julian 4 October 1582 (Gregorian 14 October) weekday");
+  expect(C.weekday(1752, 9, 13), 3, "Gregorian 13 September 1752 weekday");
+  expect(C.weekday(1752, 9, 14), 4, "14 September 1752 weekday");
+  let n53 = 0;
+  for (let Y = 2001; Y <= 2400; Y++) if (C.isoWeeksInYear(Y) === 53) n53++;
+  expect(n53, 71, "years of 53 ISO weeks in 400");
+  for (const [date, want] of [["2026-11-10", "2026-W46"], ["2021-01-03", "2020-W53"], ["2024-12-30", "2025-W01"], ["2026-12-31", "2026-W53"], ["2027-01-01", "2026-W53"]]) {
+    const [Y, m, d] = date.split("-").map(Number), w = C.isoWeek(Y, m, d);
+    expect(`${w.year}-W${String(w.week).padStart(2, "0")}`, want, `ISO week of ${date}`);
+  }
+  expect([...Array(7)].map((_, i) => C.CHALDEAN[C.hourRuler(i, 0)]).join(" "), "Saturn Sun Moon Mars Mercury Jupiter Venus", "planetary first hours");
 }
 
 if (problems.length) {
