@@ -1,0 +1,78 @@
+<!--meta {"title": "The Week", "description": "The one cycle in the almanac that follows nothing in the sky: seven days counted without a break through every calendar reform, named for the planets by the hours, found in your head by Conway's Doomsday rule, and fitted to the year by ISO's 53-week years. Worked out live in your browser.", "script": "week.js"} -->
+<p class="kicker">Chapter viii</p>
+<h1>The Week</h1>
+<p class="lede">Every other cycle in this almanac is set by the sky. The week is set by nothing but counting, and it has been counted without a break for longer than any calendar now in use.</p>
+
+<div class="prose">
+<p class="dropcap">No body in the sky goes round in seven days. The nearest is a quarter of the Moon’s month, <span class="num" id="quarter">7.38</span> days, and a week of seven whole days drifts off it by more than a day within a month. The seven-day week is a convention. It was first kept as a continuous cycle in Judaism, by the sixth century BC at the latest; it came into increasing use in Rome after the Julian calendar of 45 BC, and in AD 321 the emperor Constantine made it the empire’s week, with Sunday a public holiday. In Christendom the cycle has run unbroken for almost two thousand years.<sup><a href="#s1">1</a></sup></p>
+<p>Because the week counts days and nothing else, a running count of days is all it needs. Astronomers keep one, the Julian Day Number, which numbers every day from 1 January 4713 BC in the Julian calendar. Add one to it and take the remainder after dividing by seven, and you have the weekday, with 0 for Sunday.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Today</th><th class="r"></th></tr></thead>
+  <tbody id="count"></tbody>
+</table></div>
+
+<h2>The reforms that kept the week</h2>
+<div class="prose">
+<p>Calendar reforms have dropped days of the month, but never days of the week. When the Gregorian calendar began, Thursday 4 October 1582 was followed by Friday 15 October.<sup><a href="#s2">2</a></sup> When Britain and its colonies changed in 1752, Wednesday 2 September was followed by Thursday 14 September.<sup><a href="#s3">3</a></sup> Ten and eleven dates went missing, and the weekdays ran on in order. The table finds each pair of days in the Julian Day count, and shows that they are consecutive.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Change</th><th>Last old date</th><th>First new date</th><th class="r">Julian Days</th></tr></thead>
+  <tbody id="reforms"></tbody>
+</table></div>
+
+<h2>Why the days come in this order</h2>
+<div class="prose">
+<p>In English, Latin and many other languages the days are named for the seven wandering lights the ancients counted as planets: the Sun, the Moon, Mars, Mercury, Jupiter, Venus and Saturn. In English four of them wear the names of Germanic gods instead: Tiw for Mars, Woden for Mercury, Thunor for Jupiter and Frig for Venus. Saturday kept Saturn.<sup><a href="#s5">5</a></sup></p>
+<p>The planets are not named in the order of the week, nor in the order of their distances. The order comes from astrology. Listed by how slowly they seem to move against the stars, the planets run Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon: the “Chaldean order”. Under the system of planetary hours each hour of the day is ruled by the next planet in that list, and the planet that rules a day’s first hour gives the day its name. A day has 24 hours, three full rounds of seven and three more, so each day’s first hour falls three places on from the last day’s.<sup><a href="#s4">4</a></sup> The grid runs the hours for one week.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="hours" viewBox="0 0 720 230" role="img" aria-labelledby="hours-cap"></svg></div>
+  <figcaption id="hours-cap">Ruling the hours…</figcaption>
+</figure>
+<figure>
+  <svg class="chart star" id="star" viewBox="0 0 720 340" role="img" aria-labelledby="star-cap"></svg>
+  <figcaption id="star-cap"></figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th>Latin</th><th>French</th><th>English</th></tr></thead>
+  <tbody id="names"></tbody>
+</table></div>
+
+<h2>The weekday in your head</h2>
+<div class="prose">
+<p>The mathematician John Conway devised a way, in 1973, to find the weekday of any date without paper.<sup><a href="#s6">6</a></sup> It rests on one fact: in any year, 4 April, 6 June, 8 August, 10 October and 12 December, 9 May and 5 September, 11 July and 7 November, and the last day of February all fall on the same weekday. Conway called it the year’s “doomsday”. Each century has an anchor day; the year’s last two digits move the anchor on; and the date is counted from the doomsday in its own month.</p>
+</div>
+<div class="controls">
+  <label for="when">Date</label>
+  <input type="date" id="when" min="1583-01-01" max="9999-12-31">
+  <span id="dd-answer" class="big" aria-live="polite"></span>
+</div>
+<div class="table-wrap"><table class="working">
+  <thead><tr><th></th><th>Working</th><th class="r">Value</th></tr></thead>
+  <tbody id="dd-steps"></tbody>
+</table></div>
+<p class="note" id="dd-note"></p>
+
+<h2>The week against the year</h2>
+<div class="prose">
+<p>A common year is 52 weeks and one day, and a leap year 52 weeks and two days, so a date falls one weekday later each year, and two after a 29 February. Weeks and years never fit, and anyone who numbers weeks has to decide which year a week belongs to. The international standard, ISO 8601, starts its weeks on Monday and gives each week to the year that holds its Thursday. Week 1 is the week with the year’s first Thursday in it.<sup><a href="#s7">7</a></sup></p>
+<p>Most years then have 52 weeks. A year that starts on a Thursday, or a leap year that starts on a Wednesday, has 53. The Gregorian cycle of 146,097 days is exactly 20,871 weeks, so the pattern of long years repeats every four hundred years, and the grid below finds them in one cycle.</p>
+</div>
+<p class="big" id="iso-today"></p>
+<figure>
+  <svg class="chart" id="iso" viewBox="0 0 720 360" role="img" aria-labelledby="iso-cap"></svg>
+  <figcaption id="iso-cap">Counting the weeks of four hundred years…</figcaption>
+</figure>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Week">Week</a>”, for the continuous week in Judaism, its spread in Rome after 45 BC, Constantine’s decree of 321, and the cycle unbroken in Christendom for almost two millennia.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a>”, for Thursday 4 October and Friday 15 October 1582.</li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Calendar_(New_Style)_Act_1750">Calendar (New Style) Act 1750</a>”, for Wednesday 2 September followed by Thursday 14 September 1752.</li>
+  <li id="s4">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Planetary_hours">Planetary hours</a>”, for the Chaldean order, the rulers of the hours and the naming of the days, explained in antiquity by Vettius Valens and Dio Cassius.</li>
+  <li id="s5">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Names_of_the_days_of_the_week">Names of the days of the week</a>”, for the Latin, French and English names and the Germanic gods.</li>
+  <li id="s6">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Doomsday_rule">Doomsday rule</a>”, for Conway’s method, its century anchors and its dates in each month.</li>
+  <li id="s7">Wikipedia, “<a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>”, for the definition of week 1, the years of 53 weeks, their 71 in each 400 years and the average year of 52.1775 weeks.</li>
+</ol>
+<p class="note">The Doomsday rule and the Julian Day Number on this page are checked by the site’s build against JavaScript’s own calendar for every day from 1583 to 2999, and the ISO weeks against worked examples, including the years that start and end inside another year’s weeks.</p>

@@ -397,6 +397,56 @@ export function sameCalendarAfter(Y) {
   for (let y = Y + 1; ; y++) if (weekday(y, 1, 1) === w && isLeapGregorian(y) === leap) return y;
 }
 
+// ---------- The week ----------
+// The Chaldean order of the seven planets, slowest first. Each hour of
+// the day is ruled by the next planet in it; the ruler of a day's first
+// hour names the day. 24 hours = 3 weeks of hours and 3 hours more, so
+// each day's ruler is three places on (Wikipedia, "Planetary hours").
+export const CHALDEAN = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"];
+// The ruler (index into CHALDEAN) of hour h (0-23) of the d-th day,
+// counting from a Saturday (d = 0) whose first hour is Saturn's.
+export const hourRuler = (d, h) => (d * 24 + h) % 7;
+
+// Julian Day Number of the Gregorian date (the day whose noon it names).
+// (JDN + 1) mod 7 is the weekday, 0 = Sunday.
+export function julianDayNumber(Y, m, d) {
+  const a = Math.floor((14 - m) / 12), y = Y + 4800 - a, mm = m + 12 * a - 3;
+  return d + Math.floor((153 * mm + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+}
+
+// Conway's Doomsday rule (1973), with the working. Every year, 4/4, 6/6,
+// 8/8, 10/10, 12/12, 9/5, 5/9, 11/7, 7/11, the last day of February and
+// 3 or 4 January fall on the same weekday, the year's "doomsday".
+export function doomsdaySteps(Y, m, d) {
+  const c = Math.floor(Y / 100), yy = ((Y % 100) + 100) % 100;
+  const anchor = (2 + 5 * (((c % 4) + 4) % 4)) % 7;
+  const a = Math.floor(yy / 12), b = yy % 12, q = Math.floor(b / 4);
+  const doomsday = (anchor + a + b + q) % 7;
+  const leap = isLeapGregorian(Y);
+  const ref = [leap ? 4 : 3, leap ? 29 : 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12][m - 1];
+  const dow = (((doomsday + d - ref) % 7) + 7) % 7;
+  return { c, yy, anchor, a, b, q, doomsday, leap, ref, dow };
+}
+
+// ISO 8601 week date: weeks start on Monday, and week 1 is the one
+// holding the year's first Thursday. Returns the ISO year and week.
+export function isoWeek(Y, m, d) {
+  const t = new Date(Date.UTC(2000, m - 1, d));
+  t.setUTCFullYear(Y);
+  const dow = t.getUTCDay() || 7; // Monday 1 ... Sunday 7
+  t.setUTCDate(t.getUTCDate() + 4 - dow); // the Thursday of this week
+  const year = t.getUTCFullYear();
+  const jan1 = new Date(Date.UTC(2000, 0, 1));
+  jan1.setUTCFullYear(year);
+  return { year, week: Math.floor((t - jan1) / DAY_MS / 7) + 1, dow };
+}
+// A year has 53 ISO weeks if it starts on a Thursday, or is leap and
+// starts on a Wednesday.
+export const isoWeeksInYear = (Y) => {
+  const w = weekday(Y, 1, 1);
+  return w === 4 || (w === 3 && isLeapGregorian(Y)) ? 53 : 52;
+};
+
 // ---------- Formatting ----------
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July",
   "August", "September", "October", "November", "December"];

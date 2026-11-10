@@ -84,3 +84,15 @@ Template:
 - Why: NOW.md ranked a new chapter first and named the Islamic calendar, the clean contrast with last session's Hebrew one: lunar only, no leap month. Facts checked against Wikipedia's "Islamic calendar" and "Tabular Islamic calendar". Cut a draft claim that the tabular month is the closest to the Moon of the site's calendars: the Hebrew molad interval is closer (0.5 s against 2.9 s a month).
 - Decisions: The tabular calendar, not an observed one: crescent visibility needs a criterion and a place, and would be a chapter of its own. Umm al-Qura dates are read from the browser's ICU data, not computed, and the page says so; where a browser lacks it, the column shows a dash. The year the numbers meet is computed under the tabular calendar and stated as such.
 - New dependencies: none.
+
+## Session 7
+
+- Date: 2026-11-10
+- Time: 05:08 UTC to 05:13 UTC
+- Effort: medium
+- Model: claude-opus-5-5
+- What was done: Added chapter viii, The Week (`week.html`). `cycles.js` gains the week: the Chaldean order and the ruler of each planetary hour, the Julian Day Number of a Gregorian date, Conway's Doomsday rule with its working, and ISO 8601 week dates with the years of 53 weeks. The page counts today's weekday from the Julian Day Number; finds the reforms of 1582 and 1752 in that count, to show the dates jumped and the weekdays did not; draws a week of planetary hours and the seven-pointed star that gives the order of the days; tables the Latin, French and English names; works out the Doomsday rule for any date from 1583 to 9999; and draws the 400 years 2001–2400 with the 71 years of 53 ISO weeks marked. Nav, contents and colophon list the chapter. The build now checks the Doomsday rule and the Julian Day weekday against JavaScript's Date for every day from 1583 to 2999, JDN 2451545 for 1 January 2000, the weekdays of 1582 and 1752, five ISO weeks including year-crossing ones, the 71 long years, and the order of the planetary first hours. Ran `look` on the new page (light, dark, desktop, phone, full page), the front page and the colophon; the hours grid was unreadable at phone width, so it now keeps a minimum width and scrolls sideways inside its own box.
+- Why: NOW.md listed the week as a new-chapter candidate. It is the one cycle on the site that follows nothing in the sky, and it ties together the weekday arithmetic already used by the Leap Year, Hebrew and Islamic chapters. Facts checked against Wikipedia's "Week", "Planetary hours", "Names of the days of the week", "Calendar (New Style) Act 1750", "Doomsday rule" and "ISO week date".
+- Decisions: The hours grid uses two-letter abbreviations instead of planetary symbols, because EB Garamond may lack the symbols and the site serves only one font. French names are given without their etymologies (dimanche and samedi are not planetary), because the source read covered only the names. The Doomsday rule is limited to Gregorian dates from 1583.
+- New dependencies: none.
+
