@@ -21,6 +21,7 @@ const NAV = [
   { file: "hebrew.html", short: "Hebrew year" },
   { file: "islamic.html", short: "Islamic year" },
   { file: "week.html", short: "The week" },
+  { file: "planets.html", short: "Planets" },
   { file: "colophon.html", short: "Colophon" },
 ];
 
@@ -274,6 +275,26 @@ expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover 
     expect(`${w.year}-W${String(w.week).padStart(2, "0")}`, want, `ISO week of ${date}`);
   }
   expect([...Array(7)].map((_, i) => C.CHALDEAN[C.hourRuler(i, 0)]).join(" "), "Saturn Sun Moon Mars Mercury Jupiter Venus", "planetary first hours");
+}
+
+// The planets: synodic periods from JPL's mean motions against the
+// published 115.88, 583.92, 779.94, 398.88 and 378.09 days; Venus's
+// inferior conjunctions within an hour of the mid-times of its transits
+// (8 June 2004 08:20, 6 June 2012 01:29 UT); Mars's perihelic
+// oppositions (within 0.4 au) in 2003, 2018 and 2035 and no others
+// between 1990 and 2040.
+{
+  for (const [p, S] of [["Mercury", 115.88], ["Venus", 583.92], ["Mars", 779.94], ["Jupiter", 398.88], ["Saturn", 378.09]]) {
+    if (Math.abs(C.synodicPeriod(p) - S) > 0.02) problems.push(`${p} synodic period: ${C.synodicPeriod(p)}`);
+  }
+  for (const t of ["2004-06-08T08:20", "2012-06-06T01:29"]) {
+    const want = new Date(`${t}Z`);
+    const ic = C.planetEvents("Venus", new Date(want - 10 * 86400000), new Date(want.getTime() + 10 * 86400000)).find((e) => e.kind === "inferior conjunction");
+    if (!ic || Math.abs(ic.date - want) > 3600000) problems.push(`Venus inferior conjunction near ${t}: ${ic?.date.toISOString()}`);
+  }
+  const close = C.planetEvents("Mars", new Date("1990-01-01T00:00:00Z"), new Date("2040-12-31T00:00:00Z"))
+    .filter((e) => e.kind === "opposition" && e.dist < 0.4).map((e) => e.date.getUTCFullYear());
+  expect(close.join(" "), "2003 2018 2035", "Mars perihelic oppositions");
 }
 
 if (problems.length) {

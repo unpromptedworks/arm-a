@@ -1,0 +1,86 @@
+<!--meta {"title": "The Planets", "description": "Why Venus returns to the same place in the sky every eight years, drawing a five-pointed star, why Mars comes close every two years and very close every fifteen or seventeen, and where the five naked-eye planets stand tonight. Worked out live in your browser.", "script": "planets.js"} -->
+<p class="kicker">Chapter ix</p>
+<h1>The Planets</h1>
+<p class="lede">Five lights wander among the stars and come back: Mercury, Venus, Mars, Jupiter and Saturn. What returns is not the planet to its place in space but the planet, the Earth and the Sun to the same line, and the time that takes is a cycle of its own.</p>
+
+<div class="prose">
+<p class="dropcap">Each planet goes round the Sun in its own time, its sidereal period. We watch from a moving platform, so what we see repeat is the synodic period: the time between one alignment of Sun, Earth and planet and the next, after the faster of the two has gained one whole lap on the slower. If the planet takes <em>P</em> days to go round and the Earth <em>E</em>, the faster gains 1/<em>P</em> − 1/<em>E</em> of a lap a day, so the synodic period <em>S</em> is given by 1/<em>S</em> = |1/<em>P</em> − 1/<em>E</em>|.<sup><a href="#s2">2</a></sup> The table works it out from the mean motions in the Jet Propulsion Laboratory’s elements, with the Earth’s year of <span class="num" id="earth-year">365.25</span> days.<sup><a href="#s1">1</a></sup></p>
+<p>Mars is the slow case. It goes round in under two years, but the Earth is chasing it, and it takes more than two years for the Earth to lap it. Jupiter and Saturn go round so slowly that the Earth laps them in little more than a year: Jupiter comes back to the evening sky about a month later each year, and Saturn about a fortnight later.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th class="r">Orbit, days</th><th>1 / (1/<em>faster</em> − 1/<em>slower</em>)</th><th class="r">Synodic, days</th><th class="r">Years</th></tr></thead>
+  <tbody id="periods"></tbody>
+</table></div>
+
+<h2>Where they stand tonight</h2>
+<div class="prose">
+<p>The angle between a planet and the Sun, as we see it, is its elongation. A planet east of the Sun sets after it and shines in the evening; one west of the Sun rises before it and shines in the morning. Mercury and Venus, inside our orbit, never stray far: Venus reaches between about 45° and 47° from the Sun, and Mercury between about 18° and 28°, as the elongations in the table of the coming year show. They pass between us and the Sun at inferior conjunction and behind it at superior conjunction. The outer planets can stand opposite the Sun, at opposition, when they are nearest, brightest and up all night.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th class="r">From the Sun</th><th>Sky</th><th class="r">Distance, au</th><th>Next event</th></tr></thead>
+  <tbody id="tonight"></tbody>
+</table></div>
+<figure>
+  <svg class="chart" id="plan" viewBox="0 0 720 400" role="img" aria-labelledby="plan-cap"></svg>
+  <figcaption id="plan-cap">Placing the planets…</figcaption>
+</figure>
+<h3>The coming year</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Date</th><th>Planet</th><th>Event</th><th class="r">Elongation or distance</th></tr></thead>
+  <tbody id="events"></tbody>
+</table></div>
+
+<h2>Venus and the eight-year star</h2>
+<div class="prose">
+<p>Five synodic periods of Venus come to <span class="num" id="venus-8">2,919.6 days</span>, and eight of our years to <span class="num" id="venus-yr">2,921.9 days</span>: in eight years Venus returns to the same place in our sky, on nearly the same dates, <span class="num" id="venus-off">2.4</span> days early. In those eight years Venus itself goes round the Sun thirteen times, in <span class="num" id="venus-13">2,921.1</span> days.<sup><a href="#s3">3</a></sup></p>
+<p>Seen from the Earth, Venus draws a loop each time it overtakes us, five loops in the eight years. Seen from the Sun, each inferior conjunction falls on average 144° back round from the last, two-fifths of a circle (the table shows each turn a few degrees either side of it), so joining the five in order of time draws a five-pointed star, the “pentagram of Venus”.<sup><a href="#s4">4</a></sup> The two pictures are of the same eight years. After them the star begins again, turned back by <span class="num" id="venus-drift">2.5</span>°.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="pentagram" viewBox="0 0 720 360" role="img" aria-labelledby="pentagram-cap"></svg></div>
+  <figcaption id="pentagram-cap">Drawing eight years of Venus…</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Inferior conjunction</th><th class="r">Direction from the Sun</th><th class="r">Turn</th><th class="r">Days after the last</th><th class="r">Distance, au</th></tr></thead>
+  <tbody id="venus"></tbody>
+</table></div>
+<p class="note">The direction is Venus’s heliocentric longitude, measured from the March equinox of J2000 along the ecliptic. The last row begins the next eight years.</p>
+
+<h2>Mars, near and far</h2>
+<div class="prose">
+<p>Mars comes to opposition every 780 days or so, but its orbit is eccentric, and how near it comes depends on where in that orbit the Earth catches it. Near Mars’s perihelion, at the end of August, the two are nearest; near its aphelion, in February, much farther apart. Oppositions fall about seven weeks later each time round, so a perihelic opposition, the closest kind, comes back after fifteen or seventeen years.<sup><a href="#s5">5</a></sup> The chart counts them.</p>
+</div>
+<figure>
+  <svg class="chart" id="mars" viewBox="0 0 720 280" role="img" aria-labelledby="mars-cap"></svg>
+  <figcaption id="mars-cap">Finding the oppositions…</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Next oppositions</th><th class="r">Days after the last</th><th class="r">Distance, au</th><th class="r">Million km</th></tr></thead>
+  <tbody id="mars-next"></tbody>
+</table></div>
+<div class="prose">
+<p>The pattern itself repeats after 37 synodic periods, <span class="num" id="mars-79">29,000 days</span>, against 79 years of <span class="num" id="mars-79y">28,854 days</span>. An opposition 79 years from now will look much like one today.<sup><a href="#s5">5</a></sup></p>
+</div>
+
+<h2>The long returns</h2>
+<div class="prose">
+<p>Every planet has spans like Venus’s eight years, whole numbers of years that come close to whole numbers of synodic periods, after which it appears on nearly the same dates in nearly the same place. The table searches every span up to a hundred years and keeps each one that comes closer than any shorter span did. The last column is the years minus the periods: positive, and the planet comes back that many days early.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th class="r">Years</th><th class="r">Synodic periods</th><th class="r">Difference, days</th></tr></thead>
+  <tbody id="returns"></tbody>
+</table></div>
+
+<h2>How the positions are found</h2>
+<div class="prose">
+<p>Each planet’s orbit is given by six elements, its size, shape, tilt, the place of the planet along it at one moment, and the directions of its perihelion and node, each with a slow rate of change. E. M. Standish of the Jet Propulsion Laboratory fitted these to the planetary ephemeris for the years 1800 to 2050.<sup><a href="#s1">1</a></sup> For any moment the page sets the elements to that date, solves Kepler’s equation for where the planet is along its ellipse, and turns the ellipse into place. Subtracting the Earth’s position gives the planet as we see it. Conjunctions and oppositions are found by stepping a day at a time until the planet’s longitude crosses the Sun’s or the opposite point, then halving the step forty times. Standish gives the errors over 1800–2050 as about 15 to 40 seconds of arc in longitude for Mercury, Venus, the Earth and Mars, and 400 and 600 for Jupiter and Saturn,<sup><a href="#s1">1</a></sup> which moves a conjunction by minutes for the inner planets and by up to a quarter of an hour or so for the outer; the page ignores the travel time of light, which moves it by a few minutes more. The dates here are good to the day, and usually to the hour.</p>
+</div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">E. M. Standish, Jet Propulsion Laboratory, “<a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">Approximate Positions of the Planets</a>”, table 1: the Keplerian elements and rates for 1800–2050, the method of computing positions from them, and their errors.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Orbital_period">Orbital period</a>”, for the relation between sidereal and synodic periods.</li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Venus">Venus</a>”, for the synodic period of 583.92 days and thirteen orbits in 7.998 years.</li>
+  <li id="s4">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Pentagram_of_Venus">Pentagram of Venus</a>”, for the 13:8 resonance and the shift of 144° at each inferior conjunction.</li>
+  <li id="s5">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Orbit_of_Mars">Orbit of Mars</a>” and “<a href="https://en.wikipedia.org/wiki/Mars">Mars</a>”, for the synodic period of 779.9 days, perihelic oppositions 15 or 17 years apart (2003, 2018, 2035) and the 79-year cycle of 37 synodic periods.</li>
+</ol>
+<p class="note">The site’s build checks the synodic periods against those published, the inferior conjunctions of Venus against the mid-times of its transits of 2004 and 2012, and the years of Mars’s perihelic oppositions.</p>
