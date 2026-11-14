@@ -580,3 +580,122 @@ export function islamicFromDate(date) {
   const d = rd - islamicRD(Y, m, 1) + 1;
   return { year: Y, month: m, day: d, days, cycles: Math.floor(days / ISLAMIC_CYCLE_DAYS), rest: ((days % ISLAMIC_CYCLE_DAYS) + ISLAMIC_CYCLE_DAYS) % ISLAMIC_CYCLE_DAYS };
 }
+
+// ---------- The planets ----------
+// Keplerian elements and their rates per Julian century, referred to the
+// mean ecliptic and equinox of J2000, from E. M. Standish, "Approximate
+// Positions of the Planets", JPL Solar System Dynamics, table 1, valid
+// 1800 to 2050. Each row: a (au), e, I, L, long. perihelion, long. node
+// (degrees), then the six rates. "Earth" is the Earth–Moon barycentre.
+export const PLANET_ELEMENTS = {
+  Mercury: [0.38709927, 0.20563593, 7.00497902, 252.25032350, 77.45779628, 48.33076593,
+    0.00000037, 0.00001906, -0.00594749, 149472.67411175, 0.16047689, -0.12534081],
+  Venus: [0.72333566, 0.00677672, 3.39467605, 181.97909950, 131.60246718, 76.67984255,
+    0.00000390, -0.00004107, -0.00078890, 58517.81538729, 0.00268329, -0.27769418],
+  Earth: [1.00000261, 0.01671123, -0.00001531, 100.46457166, 102.93768193, 0.0,
+    0.00000562, -0.00004392, -0.01294668, 35999.37244981, 0.32327364, 0.0],
+  Mars: [1.52371034, 0.09339410, 1.84969142, -4.55343205, -23.94362959, 49.55953891,
+    0.00001847, 0.00007882, -0.00813131, 19140.30268499, 0.44441088, -0.29257343],
+  Jupiter: [5.20288700, 0.04838624, 1.30439695, 34.39644051, 14.72847983, 100.47390909,
+    -0.00011607, -0.00013253, -0.00183714, 3034.74612775, 0.21252668, 0.20469106],
+  Saturn: [9.53667594, 0.05386179, 2.48599187, 49.95424423, 92.59887831, 113.66242448,
+    -0.00125060, -0.00050991, 0.00193609, 1222.49362201, -0.41897216, -0.28867794],
+};
+export const NAKED_EYE = ["Mercury", "Venus", "Mars", "Jupiter", "Saturn"];
+export const INFERIOR = (p) => p === "Mercury" || p === "Venus";
+
+// Mean sidereal period in days, from the rate of the mean longitude.
+export const siderealPeriod = (p) => 36525 * 360 / PLANET_ELEMENTS[p][9];
+// Mean synodic period: the time for the planet to gain or lose one whole
+// lap on the Earth, 1/S = |1/P - 1/E|.
+export const synodicPeriod = (p) => 1 / Math.abs(1 / siderealPeriod(p) - 1 / siderealPeriod("Earth"));
+
+// Heliocentric ecliptic coordinates (au, J2000) at a Julian Day, by
+// Standish's recipe: the elements at the date, Kepler's equation for the
+// eccentric anomaly, then rotation from the orbit into the ecliptic.
+// Dynamical Time and UT differ by about a minute; that is ignored.
+export function heliocentric(p, jd) {
+  const E0 = PLANET_ELEMENTS[p], T = (jd - 2451545.0) / 36525;
+  const [a, e, I, L, w, O] = E0.slice(0, 6).map((v, i) => v + E0[i + 6] * T);
+  const omega = (w - O) * RAD, inc = I * RAD, node = O * RAD;
+  let M = (((L - w) % 360) + 540) % 360 - 180; // degrees, -180..180
+  M *= RAD;
+  let E = M + e * Math.sin(M);
+  for (let i = 0; i < 20; i++) {
+    const dE = (M - (E - e * Math.sin(E))) / (1 - e * Math.cos(E));
+    E += dE;
+    if (Math.abs(dE) < 1e-12) break;
+  }
+  const xp = a * (Math.cos(E) - e), yp = a * Math.sqrt(1 - e * e) * Math.sin(E);
+  const cw = Math.cos(omega), sw = Math.sin(omega), cO = Math.cos(node), sO = Math.sin(node), cI = Math.cos(inc), sI = Math.sin(inc);
+  return {
+    x: (cw * cO - sw * sO * cI) * xp + (-sw * cO - cw * sO * cI) * yp,
+    y: (cw * sO + sw * cO * cI) * xp + (-sw * sO + cw * cO * cI) * yp,
+    z: (sw * sI) * xp + (cw * sI) * yp,
+  };
+}
+
+// The planet as seen from the Earth at a Date: geocentric ecliptic
+// longitude and latitude (degrees), distance (au), the Sun's longitude,
+// the elongation (angle from the Sun) and which side of the Sun it is on.
+// Light-time and aberration are ignored; for timing conjunctions they
+// shift both bodies' positions alike to within a few minutes of arc.
+export function planetFromEarth(p, date) {
+  const jd = toJD(date), P = heliocentric(p, jd), G = heliocentric("Earth", jd);
+  const x = P.x - G.x, y = P.y - G.y, z = P.z - G.z;
+  const dist = Math.hypot(x, y, z);
+  const lon = ((Math.atan2(y, x) / RAD) + 360) % 360, lat = Math.asin(z / dist) / RAD;
+  const sunLon = ((Math.atan2(-G.y, -G.x) / RAD) + 360) % 360;
+  const cosEl = -(x * G.x + y * G.y + z * G.z) / (dist * Math.hypot(G.x, G.y, G.z));
+  const diff = ((lon - sunLon) % 360 + 360) % 360; // 0..360, east of the Sun when < 180
+  return { lon, lat, dist, sunLon, elong: Math.acos(Math.max(-1, Math.min(1, cosEl))) / RAD, east: diff < 180, diff, x, y, z,
+    helioLon: ((Math.atan2(P.y, P.x) / RAD) + 360) % 360, sunDist: Math.hypot(P.x, P.y, P.z) };
+}
+
+// The planet's events between two Dates, in order: conjunctions with the
+// Sun (inferior or superior for Mercury and Venus), oppositions (the
+// outer planets), and greatest elongations east and west (Mercury and
+// Venus). Found by stepping a day at a time and refining by bisection
+// (crossings) or golden-section search (maxima). Each event:
+// { date, kind, ...planetFromEarth at that moment }.
+export function planetEvents(p, from, to) {
+  const out = [], step = 86400000, inner = INFERIOR(p);
+  const d = (t) => planetFromEarth(p, new Date(t)).diff;
+  const el = (t) => planetFromEarth(p, new Date(t)).elong;
+  const wrap = (v) => ((v + 540) % 360) - 180; // -180..180
+  const push = (t, kind) => { const at = new Date(t); out.push({ date: at, kind, ...planetFromEarth(p, at) }); };
+  let t0 = from.getTime(), d0 = d(t0), e0 = el(t0), e1 = el(t0 + step);
+  for (let t = t0 + step; t <= to.getTime(); t += step) {
+    const d1 = d(t);
+    for (const target of inner ? [0] : [0, 180]) {
+      const a = wrap(d0 - target), b = wrap(d1 - target);
+      if (a !== b && Math.sign(a) !== Math.sign(b) && Math.abs(a - b) < 90) {
+        let lo = t - step, hi = t, fa = a;
+        for (let i = 0; i < 40; i++) {
+          const mid = (lo + hi) / 2, fm = wrap(d(mid) - target);
+          if (Math.sign(fm) === Math.sign(fa)) { lo = mid; fa = fm; } else hi = mid;
+        }
+        const tc = (lo + hi) / 2;
+        if (target === 180) push(tc, "opposition");
+        else if (inner) push(tc, planetFromEarth(p, new Date(tc)).dist < 1 ? "inferior conjunction" : "superior conjunction");
+        else push(tc, "conjunction");
+      }
+    }
+    if (inner) {
+      const e2 = el(t + step);
+      if (e1 > e0 && e1 >= e2) {
+        let lo = t - 2 * step, hi = t + step;
+        const g = (Math.sqrt(5) - 1) / 2;
+        for (let i = 0; i < 50; i++) {
+          const m1 = hi - g * (hi - lo), m2 = lo + g * (hi - lo);
+          if (el(m1) < el(m2)) lo = m1; else hi = m2;
+        }
+        const tm = (lo + hi) / 2;
+        push(tm, planetFromEarth(p, new Date(tm)).east ? "greatest elongation east" : "greatest elongation west");
+      }
+      e0 = e1; e1 = e2;
+    }
+    d0 = d1;
+  }
+  return out.sort((x, y) => x.date - y.date);
+}
