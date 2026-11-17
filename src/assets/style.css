@@ -189,3 +189,35 @@ svg.chart .box.now { stroke: var(--ink); stroke-width: 2; }
 svg.chart .ring { fill: none; stroke: var(--rule); stroke-width: 1; }
 svg.chart .node { fill: var(--ink); }
 svg.chart.wide { min-width: 620px; }
+
+/* The masthead names three pages; a chapter lights "Contents". */
+nav.site a.here { color: var(--ink); }
+
+/* Previous and next chapter, at the foot of each chapter. */
+nav.pager { display: flex; justify-content: space-between; gap: 1rem; margin: 3rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule); font-variant: normal; letter-spacing: 0; font-size: 1.15rem; }
+nav.pager a { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); max-width: 48%; }
+nav.pager a[rel="next"], nav.pager a:last-child { text-align: right; margin-left: auto; }
+nav.pager a:hover { color: var(--rubric); }
+nav.pager .dir { font-variant: small-caps; letter-spacing: 0.08em; color: var(--rubric); font-size: 0.95rem; }
+nav.pager .roman { color: var(--ink-soft); font-variant: small-caps; }
+
+/* The ladder of returns (contents page): a log scale from a day to 10^10 days. */
+.ladder { list-style: none; padding: 0; margin: 1.25rem 0 0; }
+.ladder li { display: grid; grid-template-columns: 11rem 1fr auto; gap: 0.1rem 1rem; align-items: baseline; padding: 0.5rem 0 0.6rem; border-top: 1px solid var(--rule); }
+.ladder a { text-decoration: none; font-size: 1.15rem; }
+.ladder .roman { color: var(--rubric); font-variant: small-caps; margin-right: 0.35rem; }
+.ladder .what { color: var(--ink-soft); font-size: 1rem; }
+.ladder .span { font-size: 1rem; text-align: right; }
+.ladder .track { grid-column: 1 / -1; display: block; height: 0.5rem; margin-top: 0.3rem;
+  background: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 10%); }
+.ladder .bar { display: block; height: 100%; background: var(--ink); }
+.ladder li:last-child .bar { background: var(--rubric); }
+.ladder-scale { position: relative; height: 3.2rem; border-top: 1px solid var(--ink); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 1.5rem; }
+.ladder-scale span { position: absolute; top: 0; padding-top: 0.3rem; border-left: 1px solid var(--ink-soft); padding-left: 0.2rem; white-space: nowrap; line-height: 1.1; }
+.ladder-scale span:nth-child(even) { top: 1.5rem; }
+@media (max-width: 34rem) {
+  .ladder li { grid-template-columns: 1fr auto; }
+  .ladder .what { grid-column: 1 / -1; grid-row: 2; }
+  .ladder-scale { font-size: 0.75rem; }
+}
+.ladder-scale span.end { border-left: 0; border-right: 1px solid var(--ink-soft); padding: 0.3rem 0.2rem 0 0; }
