@@ -10,20 +10,88 @@ const NAME = "The Almanac of Returning Things";
 const ABOUT = "https://unpromptedworks.com/#about";
 const SRC = "src", OUT = "dist";
 
-// Pages, in the order they appear in the contents.
+// The chapters, in order. Each gives what returns and how long it takes,
+// in days, for the contents page's ladder; the figures are those the
+// chapters themselves work out and cite.
+const CHAPTERS = [
+  { file: "moon.html", roman: "i", title: "The Moon",
+    blurb: "A month of 29.53 days, why it is longer than one orbit, and the nineteen-year cycle in which the phases fall on the same dates again.",
+    returns: "The phases", span: "29.53 days", days: 29.530589 },
+  { file: "daylight.html", roman: "ii", title: "Daylight",
+    blurb: "How long the Sun is up, anywhere from the equator to the poles, through a whole year.",
+    returns: "The long and short days", span: "365.24 days", days: 365.24219 },
+  { file: "easter.html", roman: "iii", title: "Easter",
+    blurb: "The fourteen small sums that set a moving feast, and the 5,700,000 years it takes to repeat.",
+    returns: "The dates of Easter, in order", span: "5,700,000 years", days: 5700000 * 365.2425 },
+  { file: "eclipses.html", roman: "iv", title: "Eclipses",
+    blurb: "Why the Sun and Moon are not eclipsed every month, the seasons when they can be, and the saros of eighteen years in which eclipses return.",
+    returns: "An eclipse, by the saros", span: "6,585⅓ days", days: 6585.32 },
+  { file: "calendar.html", roman: "v", title: "The Leap Year",
+    blurb: "Why 1900 had no 29 February, how the equinox wanders inside the rule, and the 400 years after which the calendar repeats exactly.",
+    returns: "The Gregorian calendar, exactly", span: "146,097 days", days: 146097 },
+  { file: "hebrew.html", roman: "vi", title: "The Hebrew Year",
+    blurb: "Months that follow the Moon in years that follow the Sun: the molad, the nineteen-year cycle and the four rules that set the new year.",
+    returns: "The leap years, by the cycle", span: "19 years", days: 235 * (29 + (12 * 1080 + 793) / 25920) },
+  { file: "islamic.html", roman: "vii", title: "The Islamic Year",
+    blurb: "Twelve Moons and no leap month: the thirty-year table, and Ramadan’s journey backwards through every season in about 33 years.",
+    returns: "The tabular leap years", span: "10,631 days", days: 10631 },
+  { file: "week.html", roman: "viii", title: "The Week",
+    blurb: "Seven days that follow nothing in the sky: unbroken through every reform, named by the planetary hours, and found in your head by Conway’s rule.",
+    returns: "The weekday", span: "7 days", days: 7 },
+  { file: "planets.html", roman: "ix", title: "The Planets",
+    blurb: "Venus’s eight-year star, Mars near and far every fifteen or seventeen years, and where the five bright planets stand tonight.",
+    returns: "Venus, by its star", span: "about 2,920 days", days: 5 * 583.92 },
+];
+
+// The pages built, and the three the masthead names. Chapters count as
+// "Contents" in the masthead, so it stays one short line on a phone.
+const PAGES = ["index.html", "contents.html", ...CHAPTERS.map((c) => c.file), "colophon.html"];
 const NAV = [
   { file: "index.html", short: "Today" },
-  { file: "moon.html", short: "The Moon" },
-  { file: "daylight.html", short: "Daylight" },
-  { file: "easter.html", short: "Easter" },
-  { file: "eclipses.html", short: "Eclipses" },
-  { file: "calendar.html", short: "Leap years" },
-  { file: "hebrew.html", short: "Hebrew year" },
-  { file: "islamic.html", short: "Islamic year" },
-  { file: "week.html", short: "The week" },
-  { file: "planets.html", short: "Planets" },
+  { file: "contents.html", short: "Contents" },
   { file: "colophon.html", short: "Colophon" },
 ];
+const navFor = (file) => (CHAPTERS.some((c) => c.file === file) ? "contents.html" : file);
+
+const chapterList = () => `<ol class="chapters">
+${CHAPTERS.map((c) => `  <li><span class="roman">${c.roman}.</span><a href="${c.file}">${c.title}</a>
+    <p>${c.blurb}</p></li>`).join("\n")}
+</ol>`;
+
+// Every chapter's cycle on one logarithmic scale, shortest first. The bar
+// runs from a day (10^0) to ten thousand million days (10^10).
+function ladder() {
+  const pct = (d) => (Math.log10(d) / 10 * 100).toFixed(2);
+  const marks = [
+    [1, "a day"], [30.44, "a month"], [365.2425, "a year"],
+    [3652.425, "ten years"], [36524.25, "a century"], [365242.5, "a thousand years"],
+    [365242500, "a million years"],
+  ];
+  const rows = [...CHAPTERS].sort((a, b) => a.days - b.days).map((c) =>
+    `  <li><a href="${c.file}"><span class="roman">${c.roman}.</span>${c.title}</a><span class="what">${c.returns}</span><span class="span num">${c.span}</span>
+    <span class="track" aria-hidden="true"><span class="bar" style="width:${pct(c.days)}%"></span></span></li>`).join("\n");
+  const scale = marks.map(([d, t]) => Math.log10(d) > 8
+    ? `<span class="end" style="right:${(100 - pct(d)).toFixed(2)}%">${t}</span>`
+    : `<span style="left:${pct(d)}%">${t}</span>`).join("");
+  return `<ol class="ladder">
+${rows}
+</ol>
+<div class="ladder-scale" aria-hidden="true">${scale}</div>`;
+}
+
+function pager(file) {
+  const i = CHAPTERS.findIndex((c) => c.file === file);
+  if (i < 0) return "";
+  const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];
+  const link = (c, rel, label) => c
+    ? `<a rel="${rel}" href="${c.file}"><span class="dir">${label}</span><span><span class="roman">${c.roman}.</span> ${c.title}</span></a>`
+    : `<a href="contents.html"><span class="dir">${label}</span>All chapters</a>`;
+  return `
+<nav class="pager" aria-label="Chapters">
+  ${link(prev, "prev", "Previous")}
+  ${link(next, "next", "Next")}
+</nav>`;
+}
 
 // Each page starts with <!--meta {json} --> giving title, description
 // and, optionally, a script to load.
@@ -39,7 +107,7 @@ function layout(file, meta, body) {
   const title = file === "index.html" ? NAME : `${meta.title} · ${NAME}`;
   const url = file === "index.html" ? `${SITE}/` : `${SITE}/${file}`;
   const nav = NAV.map((n) =>
-    `<a href="${n.file === "index.html" ? "./" : n.file}"${n.file === file ? ' aria-current="page"' : ""}>${n.short}</a>`
+    `<a href="${n.file === "index.html" ? "./" : n.file}"${n.file === file ? ' aria-current="page"' : n.file === navFor(file) ? ' class="here"' : ""}>${n.short}</a>`
   ).join("\n      ");
   const script = meta.script ? `\n<script type="module" src="assets/${meta.script}"></script>` : "";
   return `<!doctype html>
@@ -65,15 +133,15 @@ function layout(file, meta, body) {
 <body>
 <header class="masthead">
   <a class="wordmark" href="./"><span class="ring" aria-hidden="true"></span><span>The Almanac of <em>Returning Things</em></span></a>
-  <nav aria-label="Contents">
+  <nav class="site" aria-label="Site">
       ${nav}
   </nav>
 </header>
 <main>
-${body.trim()}
+${body.trim().replace("<!--chapters-->", chapterList()).replace("<!--ladder-->", ladder())}${pager(file)}
 </main>
 <footer class="colophon">
-  <p>Every figure on this page was worked out in your browser when it loaded. Nothing is fetched and nothing you enter leaves your device.</p>
+  <p>${meta.script ? "Every figure on this page was worked out in your browser when it loaded. " : ""}Nothing is fetched and nothing you enter leaves your device.</p>
   <p><a href="${ABOUT}">An AI made this site.</a> · <a href="colophon.html">Sources and credits</a></p>
 </footer>
 </body>
@@ -88,12 +156,12 @@ for (const f of readdirSync(OUT)) if (f !== ".gitkeep") rmSync(join(OUT, f), { r
 cpSync(join(SRC, "assets"), join(OUT, "assets"), { recursive: true });
 cpSync(join(SRC, "static"), OUT, { recursive: true });
 
-for (const { file } of NAV) {
+for (const file of PAGES) {
   const { meta, body } = parsePage(readFileSync(join(SRC, "pages", file), "utf8"), file);
   writeFileSync(join(OUT, file), layout(file, meta, body));
 }
-const extra = readdirSync(join(SRC, "pages")).filter((f) => !NAV.some((n) => n.file === f));
-if (extra.length) throw new Error(`pages not in NAV: ${extra.join(", ")}`);
+const extra = readdirSync(join(SRC, "pages")).filter((f) => !PAGES.includes(f));
+if (extra.length) throw new Error(`pages not in PAGES: ${extra.join(", ")}`);
 
 // ---------- check ----------
 const problems = [];
@@ -135,6 +203,16 @@ for (const f of files.filter((p) => [".js", ".css"].includes(extname(p)))) {
   if (/\bfetch\(|XMLHttpRequest|@import\s+url\(\s*["']?https?:|url\(\s*["']?https?:/.test(text)) {
     problems.push(`${f}: reaches for another site`);
   }
+}
+
+// Each chapter's own heading agrees with the contents.
+for (const c of CHAPTERS) {
+  const src = readFileSync(join(SRC, "pages", c.file), "utf8");
+  if (!src.includes(`<p class="kicker">Chapter ${c.roman}</p>`)) problems.push(`${c.file}: kicker is not "Chapter ${c.roman}"`);
+  if (!src.includes(`<h1>${c.title}</h1>`)) problems.push(`${c.file}: h1 is not "${c.title}"`);
+}
+for (const f of ["index.html", "contents.html"]) {
+  if (readFileSync(join(OUT, f), "utf8").includes("<!--")) problems.push(`${f}: unfilled marker`);
 }
 
 // The arithmetic itself, against dates published elsewhere.
