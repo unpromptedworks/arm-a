@@ -699,3 +699,63 @@ export function planetEvents(p, from, to) {
   }
   return out.sort((x, y) => x.date - y.date);
 }
+
+// ---------- retrograde motion ----------
+// General precession in ecliptic longitude, degrees per day (5029.1
+// seconds of arc a century). planetFromEarth gives longitudes referred to
+// the fixed equinox of J2000; adding this turns them into longitudes of
+// date, the frame in which stations are usually tabulated.
+export const PRECESSION_PER_DAY = 5029.0966 / 3600 / 36525;
+const wrap180 = (v) => ((v % 360) + 540) % 360 - 180;
+
+// The planet's apparent daily motion in ecliptic longitude of date at a
+// Date, in degrees per day: positive direct (eastward), negative
+// retrograde. A central difference over two hours either side.
+export function dailyMotion(p, date) {
+  const h = 2 * 3600000, t = date.getTime();
+  const a = planetFromEarth(p, new Date(t - h)).lon, b = planetFromEarth(p, new Date(t + h)).lon;
+  return wrap180(b - a) / (2 * h / 86400000) + PRECESSION_PER_DAY;
+}
+// Longitude of date, degrees 0..360.
+export const longitudeOfDate = (p, date) =>
+  (planetFromEarth(p, date).lon + PRECESSION_PER_DAY * (toJD(date) - 2451545.0) + 360) % 360;
+
+// The stations between two Dates: the moments the daily motion passes
+// through zero, found by stepping a day at a time and halving the step
+// forty times. Each: { date, kind: "retrograde" (the planet stops and
+// turns west) or "direct" (it stops and turns east again), lon }.
+export function planetStations(p, from, to) {
+  const out = [], step = 86400000;
+  let t0 = from.getTime(), v0 = dailyMotion(p, from);
+  for (let t = t0 + step; t <= to.getTime(); t += step) {
+    const v1 = dailyMotion(p, new Date(t));
+    if (Math.sign(v1) !== Math.sign(v0)) {
+      let lo = t - step, hi = t, fa = v0;
+      for (let i = 0; i < 40; i++) {
+        const mid = (lo + hi) / 2, fm = dailyMotion(p, new Date(mid));
+        if (Math.sign(fm) === Math.sign(fa)) { lo = mid; fa = fm; } else hi = mid;
+      }
+      const at = new Date((lo + hi) / 2);
+      out.push({ date: at, kind: v0 > 0 ? "retrograde" : "direct", lon: longitudeOfDate(p, at) });
+    }
+    v0 = v1;
+  }
+  return out;
+}
+
+// The retrograde spells that begin between two Dates, each with the
+// station that begins it, the one that ends it, its length in days and
+// the arc it runs back, in degrees. A spell under way at `from` is
+// included, found by looking back one synodic period.
+export function retrogrades(p, from, to) {
+  const back = new Date(from.getTime() - synodicPeriod(p) * 86400000);
+  const ahead = new Date(to.getTime() + 200 * 86400000);
+  const st = planetStations(p, back, ahead), out = [];
+  for (let i = 0; i + 1 < st.length; i++) {
+    const a = st[i], b = st[i + 1];
+    if (a.kind !== "retrograde" || b.kind !== "direct") continue;
+    if (b.date < from || a.date > to) continue;
+    out.push({ start: a.date, end: b.date, days: (b.date - a.date) / 86400000, arc: -wrap180(b.lon - a.lon), startLon: a.lon, endLon: b.lon });
+  }
+  return out;
+}
