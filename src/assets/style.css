@@ -221,3 +221,5 @@ nav.pager .roman { color: var(--ink-soft); font-variant: small-caps; }
   .ladder-scale { font-size: 0.75rem; }
 }
 .ladder-scale span.end { border-left: 0; border-right: 1px solid var(--ink-soft); padding: 0.3rem 0.2rem 0 0; }
+button[aria-pressed="true"] { background: var(--rubric); }
+svg.chart .line.ref.hit { stroke: var(--rubric); stroke-width: 1.25; }

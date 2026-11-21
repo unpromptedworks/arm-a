@@ -41,6 +41,9 @@ const CHAPTERS = [
   { file: "planets.html", roman: "ix", title: "The Planets",
     blurb: "Venus’s eight-year star, Mars near and far every fifteen or seventeen years, and where the five bright planets stand tonight.",
     returns: "Venus, by its star", span: "about 2,920 days", days: 5 * 583.92 },
+  { file: "retrograde.html", roman: "x", title: "Retrograde",
+    blurb: "Why the planets stop, run backwards among the stars and turn again: the loops of all five, when the next fall, and how long and far they go.",
+    returns: "A backward loop of Mercury", span: "115.88 days", days: 115.88 },
 ];
 
 // The pages built, and the three the masthead names. Chapters count as
@@ -373,6 +376,25 @@ expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover 
   const close = C.planetEvents("Mars", new Date("1990-01-01T00:00:00Z"), new Date("2040-12-31T00:00:00Z"))
     .filter((e) => e.kind === "opposition" && e.dist < 0.4).map((e) => e.date.getUTCFullYear());
   expect(close.join(" "), "2003 2018 2035", "Mars perihelic oppositions");
+}
+
+// Retrograde: Mars's stations of 2024-25 within a day of SEDS's dates
+// (6 December 2024, 24 February 2025); over 2000-2050 each planet's mean
+// spell within 3% of Wikipedia's table (22, 41, 72, 121, 138 days), and
+// Mercury's shortest and longest within a quarter of a day of the published
+// 19.85 and 24.19 days.
+{
+  const m = C.retrogrades("Mars", new Date("2024-10-01T00:00:00Z"), new Date("2025-01-01T00:00:00Z"))[0];
+  for (const [got, want] of [[m?.start, "2024-12-06"], [m?.end, "2025-02-24"]]) {
+    if (!got || Math.abs(got - new Date(`${want}T12:00:00Z`)) > 86400000) problems.push(`Mars station near ${want}: ${got?.toISOString()}`);
+  }
+  const a = new Date("2000-01-01T00:00:00Z"), b = new Date("2050-01-01T00:00:00Z");
+  for (const [p, mean] of [["Mercury", 22], ["Venus", 41], ["Mars", 72], ["Jupiter", 121], ["Saturn", 138]]) {
+    const r = C.retrogrades(p, a, b).filter((x) => x.start >= a && x.end <= b), d = r.map((x) => x.days);
+    const got = d.reduce((u, v) => u + v, 0) / d.length;
+    if (Math.abs(got - mean) / mean > 0.03) problems.push(`${p} mean retrograde spell: ${got.toFixed(1)} days`);
+    if (p === "Mercury" && (Math.abs(Math.min(...d) - 19.85) > 0.25 || Math.abs(Math.max(...d) - 24.19) > 0.25)) problems.push(`Mercury retrograde range: ${Math.min(...d)}–${Math.max(...d)}`);
+  }
 }
 
 if (problems.length) {

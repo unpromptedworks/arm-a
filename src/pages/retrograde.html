@@ -1,0 +1,73 @@
+<!--meta {"title": "Retrograde", "description": "Why the planets stop among the stars, run backwards for weeks or months and turn east again: the loops of Mercury, Venus, Mars, Jupiter and Saturn, when the next ones fall and how long they last. Worked out live in your browser.", "script": "retrograde.js"} -->
+<p class="kicker">Chapter x</p>
+<h1>Retrograde</h1>
+<p class="lede">Night by night a planet creeps eastward among the stars. Then, once in every synodic period, it slows, stops, runs back west for weeks or months, stops again and resumes. Nothing in its orbit turns round. The loop is the Earth overtaking it, or being overtaken.</p>
+
+<div class="prose">
+<p class="dropcap">Picture two runners on concentric tracks, the inner one faster. Watched from the inner track against a distant wall, the outer runner moves forward along the wall most of the time, but while the inner runner draws level and passes, the outer seems to slide backwards. The Earth does this to Mars, Jupiter and Saturn once every synodic period, and the backward slide is centred on opposition, when the planet is nearest and brightest. Mercury and Venus, inside our orbit, overtake us instead, and their backward slide is centred on inferior conjunction, when they pass between us and the Sun.<sup><a href="#s1">1</a></sup> The moments when a planet stands still are its stations: it turns retrograde (westward) at one and direct (eastward) at the next.</p>
+<p>The table gives each planet’s motion today in degrees of ecliptic longitude per day, worked out from the orbits used in <a href="planets.html">chapter ix</a>, and its present or next retrograde spell.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th class="r">Today, ° a day</th><th>Moving</th><th>Turns retrograde</th><th>Turns direct</th><th class="r">Days</th></tr></thead>
+  <tbody id="now"></tbody>
+</table></div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="strip" viewBox="0 0 720 210" role="img" aria-labelledby="strip-cap"></svg></div>
+  <figcaption id="strip-cap">Finding the stations…</figcaption>
+</figure>
+
+<h2>The shape of a loop</h2>
+<div class="prose">
+<p>Choose a planet to draw its present or next retrograde spell. The first picture is the sky: the planet’s path in ecliptic longitude and latitude, drawn to one scale in both directions, with east on the left as it is when you face south from the northern hemisphere. The second is the same weeks seen from above the Sun, with the Earth and the planet at nine equal steps and a line of sight from each Earth through its planet, and under it the direction of each line.</p>
+</div>
+<div class="controls" id="pick" role="group" aria-label="Choose a planet"></div>
+<figure>
+  <svg class="chart" id="sky" viewBox="0 0 720 300" role="img" aria-labelledby="sky-cap"></svg>
+  <figcaption id="sky-cap">Drawing the loop…</figcaption>
+</figure>
+<figure>
+  <svg class="chart" id="above" viewBox="0 0 720 585" role="img" aria-labelledby="above-cap"></svg>
+  <figcaption id="above-cap">Drawing the lines of sight…</figcaption>
+</figure>
+<div class="prose">
+<p>The nearer the planet, the more the Earth’s own motion swings the line of sight, and the wider the loop. Saturn, nearly ten times as far from the Sun as we are, runs back only about seven degrees, Mars between ten and twenty. The latitude comes from the tilt of each planet’s orbit to ours. When a spell falls near one of the two points where the planet’s orbit crosses the plane of ours, the latitude hardly changes and the path folds back on itself in a flattened S or Z; away from them, the path opens into a loop.</p>
+</div>
+
+<h2>Eight loops of Mars</h2>
+<div class="prose">
+<p>Mars’s spells vary most, because its orbit is the most eccentric of the three outer planets and its oppositions fall at a different point of it each time. These are the eight from the perihelic opposition of 2003 to the next, in 2018, all drawn to the same scale. They show something unexpected: the nearest oppositions give the shortest, smallest loops, about ten degrees in two months, and the farthest the longest, nearly twenty in eighty days. Near perihelion Mars is closer, which widens the swing, but it is also moving fastest along its own orbit, which takes back more than the nearness gives.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="mars-loops" viewBox="0 0 720 300" role="img" aria-labelledby="mars-loops-cap"></svg></div>
+  <figcaption id="mars-loops-cap">Drawing eight loops…</figcaption>
+</figure>
+
+<h2>How long, how far</h2>
+<div class="prose">
+<p>The page searches every day from 2000 to 2050 for stations and pairs them into spells. The slower the planet goes round, the longer the Earth takes to pass it and the longer the spell, but the shorter the arc. Mercury is retrograde about one day in five; Saturn, more than a third of the time.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Planet</th><th class="r">Spells</th><th class="r">Mean days</th><th class="r">Shortest–longest</th><th class="r">Arc, degrees</th><th class="r">Share of time</th><th class="r">Published mean</th></tr></thead>
+  <tbody id="stats"></tbody>
+</table></div>
+<p class="note">Arc: how far the planet runs back in longitude between its two stations. Published mean: the average length of a retrograde spell in Wikipedia’s table.<sup><a href="#s1">1</a></sup></p>
+
+<h2>Wheels on wheels</h2>
+<div class="prose">
+<p>Retrograde motion was the hardest thing for an Earth-centred astronomy to explain. The usual answer, often credited to Apollonius of Perga at the end of the third century BC, put each planet on a small circle, the epicycle, whose centre rode round the Earth on a larger one, the deferent; when the planet’s turn on its epicycle carried it against the deferent’s motion, it went backwards. For the outer planets the model needed a strange coincidence: the line from the epicycle’s centre to the planet always pointed the same way as the line from the Earth to the Sun.<sup><a href="#s2">2</a></sup> With the Sun at the centre, the coincidence disappears: each outer planet’s epicycle is the Earth’s own orbit, seen from the other end. The loops were not understood as an effect of our own motion until Copernicus.<sup><a href="#s1">1</a></sup></p>
+</div>
+
+<h2>How the stations are found</h2>
+<div class="prose">
+<p>Positions come from E. M. Standish’s approximate elements for 1800–2050, as in chapter ix.<sup><a href="#s3">3</a></sup> The daily motion is the change in the planet’s geocentric longitude over four hours, scaled to a day. Those longitudes are measured from the fixed equinox of 2000, so the page adds the precession of the equinoxes, 5,029 seconds of arc a century,<sup><a href="#s4">4</a></sup> to turn them into longitudes of date, the frame almanacs use. A station is where the motion passes through zero: the page steps a day at a time and then halves the step forty times. Near a station the planet barely moves, so a small error in its position moves the station by hours. Mars’s stations of December 2024 and February 2025 come out within a day of the published dates.<sup><a href="#s5">5</a></sup> Times are given to the day.</p>
+</div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Apparent_retrograde_motion">Apparent retrograde motion</a>”, for the cause, opposition and inferior conjunction at the middle of the spells, the mean length of each planet’s spell (Mercury about 22 days, between 19.85 and 24.19; Venus 41; Mars 72; Jupiter 121; Saturn 138), and Copernicus.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Deferent_and_epicycle">Deferent and epicycle</a>”, for Apollonius, the model’s explanation of retrograde motion, and the outer planets’ epicycles keeping step with the Sun.</li>
+  <li id="s3">E. M. Standish, Jet Propulsion Laboratory, “<a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">Approximate Positions of the Planets</a>”, table 1.</li>
+  <li id="s4">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Axial_precession">Axial precession</a>”, for the rate of general precession, about 5,029 seconds of arc a century (5,029.0966 in Lieske’s theory of 1976, used here).</li>
+  <li id="s5">SEDS, “<a href="http://spider.seds.org/spider/Mars/mars2025.html">Mars 2024/25</a>”: retrogression begins 6 December 2024 and ends 24 February 2025.</li>
+</ol>
+<p class="note">The site’s build checks the 2024–25 stations of Mars against those dates, and the shortest and longest of Mercury’s spells (to a quarter of a day) and the mean spell of each planet over 2000–2050 against Wikipedia’s table.</p>
