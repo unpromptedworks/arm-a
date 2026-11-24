@@ -1,0 +1,80 @@
+<!--meta {"title": "The Standstill", "description": "Why the Moon’s reach north and south of the equator swells and shrinks over 18.6 years, from about 18 degrees to nearly 29: the turning of its nodes, the major standstill of 2025, and where the Moon rises at your latitude. Worked out live in your browser.", "script": "standstill.js"} -->
+<p class="kicker">Chapter xi</p>
+<h1>The Standstill</h1>
+<p class="lede">Each month the Moon swings north of the equator and back south, as the Sun does in a year. But how far it swings is not fixed. Over 18.6 years its reach grows from about 18 degrees to nearly 29 and shrinks again, because the tilted orbit it follows is slowly turning round.</p>
+
+<div class="prose">
+<p class="dropcap">The Sun’s path, the ecliptic, is tilted 23.44° to the celestial equator, so in a year the Sun ranges that far north and south. The Moon’s orbit is tilted a further 5.14° to the ecliptic,<sup><a href="#s1">1</a></sup> and crosses it at two points, the nodes. Where the nodes lie decides how the two tilts combine. When the ascending node, where the Moon climbs north through the ecliptic, sits at the March equinox, the Moon’s tilt adds to the Earth’s and the Moon reaches 23.44 + 5.14 = 28.58° each way. When it sits at the September equinox, the tilt subtracts and the reach is only 18.30°. The nodes are not still: they slide backwards round the ecliptic, about 19.35° a year.<sup><a href="#s2">2</a></sup> The two extremes are the major and minor lunar standstills, named because near them the Moon’s monthly turning points, like the Sun’s at a solstice, hardly move for a year or two.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Today</th><th class="r">Figure</th></tr></thead>
+  <tbody id="now"></tbody>
+</table></div>
+
+<h2>Sixty years of reach</h2>
+<div class="prose">
+<p>The page finds every turning point of the Moon from 1990 to 2050: the moments in each month when it stands farthest north and farthest south. The Moon’s position comes from the largest terms of Meeus’s lunar theory,<sup><a href="#s3">3</a></sup> good to a few hundredths of a degree. The dashed lines are the Sun’s limits, ±23.44°.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="reach" viewBox="0 0 720 320" role="img" aria-labelledby="reach-cap"></svg></div>
+  <figcaption id="reach-cap">Finding the turning points…</figcaption>
+</figure>
+<div class="prose">
+<p>Below are the standstills from 1950 to 2052, each the moment the mean ascending node reaches the March or September equinox, with the farthest the Moon goes within a year either side. The node’s rate gives one full turn in <span id="period">…</span> days.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Standstill</th><th>Node at the equinox</th><th class="r">Farthest north</th><th class="r">Farthest south</th></tr></thead>
+  <tbody id="list"></tbody>
+</table></div>
+<p class="note" id="list-note"></p>
+
+<h2>The ripple inside the wave</h2>
+<div class="prose">
+<p>The sixty-year chart has a ripple on it, and the true extremes overshoot the simple sums of 28.58° and 18.30°. The tilt of the Moon’s orbit is not quite steady: the Sun rocks it between about 4.99° and 5.30°.<sup><a href="#s1">1</a></sup> The page’s own figures show its rhythm. Here are the three years around the present or nearest standstill, with the eclipses marked.</p>
+</div>
+<figure>
+  <svg class="chart" id="ripple" viewBox="0 0 720 280" role="img" aria-labelledby="ripple-cap"></svg>
+  <figcaption id="ripple-cap">Drawing the ripple…</figcaption>
+</figure>
+<div class="prose">
+<p id="ripple-text">…</p>
+</div>
+
+<h2>From where you stand</h2>
+<div class="prose">
+<p>On the horizon the cycle shows as a wandering moonrise. Where the Sun rises swings between two limits through the year; where the Moon rises swings between two limits each month, and those limits themselves open and close over the 18.6 years. Give a latitude to see them.</p>
+</div>
+<div class="controls">
+  <label for="lat">Latitude</label>
+  <input type="range" id="lat-range" min="-89" max="89" step="0.1" aria-label="Latitude slider">
+  <input type="number" id="lat" min="-89" max="89" step="0.1">
+</div>
+<p class="note">Positive for north, negative for south. The same latitude the daylight chapter uses, kept only in your browser.</p>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="horizon" viewBox="0 0 720 300" role="img" aria-labelledby="horizon-cap"></svg></div>
+  <figcaption id="horizon-cap">Drawing the horizon…</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Reach</th><th class="r">Declination</th><th class="r">Rises, from north</th><th class="r">Highest in the sky</th></tr></thead>
+  <tbody id="rise"></tbody>
+</table></div>
+<div class="prose">
+<p>A body at declination δ rises at the bearing A from true north given by cos A = (sin δ − sin φ sin h₀) / (cos φ cos h₀), where φ is the latitude and h₀ is the altitude of the Moon’s centre at rising, about +0.125° once its parallax, its half-width and the bending of light by the air are allowed for.<sup><a href="#s4">4</a></sup> It sets at the same angle west of north. At its highest it stands 90° − φ + δ above the southern horizon, for the northern hemisphere. Hills raise the horizon and move a real moonrise by a degree or more.</p>
+<p>Some of the great stone monuments of Britain and Ireland, and sites in North America such as Chimney Rock in Colorado, have been read as marking the farthest moonrises or moonsets of a major standstill.<sup><a href="#s5">5</a></sup> The readings are argued over. The figures are not: a builder who watched the moonrise for twenty years would have seen it reach these limits and turn back.</p>
+</div>
+
+<h2>The same turning, elsewhere</h2>
+<div class="prose">
+<p>The nodes’ backward turn is the same motion that sets the eclipse seasons. An eclipse needs the Sun near a node, and because the node comes back to meet the Sun, the Sun returns to it in 346.62 days, not a full year, so the eclipse seasons arrive about nineteen days earlier each year and run once through the calendar in the same 18.6 years (<a href="eclipses.html">chapter iv</a>). And the tilted orbit, turning with the same period, nods the Earth’s own axis: the nutation, up to 17.2″ in longitude and 9.2″ in tilt, found by James Bradley in his observations of stars between 1727 and 1747.<sup><a href="#s6">6</a></sup></p>
+<p>The declinations here are geocentric: as seen from the Earth’s centre. From the surface the Moon is nearer by up to a whole Earth’s radius, and its parallax shifts it by up to about a degree, most for a Moon low in the sky. Nutation, under 20″, is left out.</p>
+</div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Orbit_of_the_Moon">Orbit of the Moon</a>”: the mean inclination of 5.145° and its range of 4.99–5.30°.</li>
+  <li id="s2">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Lunar_node">Lunar node</a>”, for the period of 18.612958 years (6,798.383 days) and the rate of 19.35° a year; and “<a href="https://en.wikipedia.org/wiki/Lunar_standstill">Lunar standstill</a>”, for the dates of the standstills and the extremes of about 28.72° and 18.13°, against which the page’s figures are tested.</li>
+  <li id="s3">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed., 1998, ch. 47 and eq. 22.2: the mean node, the fundamental arguments, the fourteen largest longitude terms and ten largest latitude terms, and the mean obliquity. The coefficients were checked against the open-source PyMeeus library’s copy of the tables.</li>
+  <li id="s4">Meeus, ch. 15, for the altitude of the Moon at rising; Wikipedia, “<a href="https://en.wikipedia.org/wiki/Sunrise_equation">Sunrise equation</a>”, for the form of the bearing.</li>
+  <li id="s5">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Lunar_standstill">Lunar standstill</a>”.</li>
+  <li id="s6">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Astronomical_nutation">Astronomical nutation</a>”.</li>
+</ol>

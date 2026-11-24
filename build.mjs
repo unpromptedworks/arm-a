@@ -44,6 +44,9 @@ const CHAPTERS = [
   { file: "retrograde.html", roman: "x", title: "Retrograde",
     blurb: "Why the planets stop, run backwards among the stars and turn again: the loops of all five, when the next fall, and how long and far they go.",
     returns: "A backward loop of Mercury", span: "115.88 days", days: 115.88 },
+  { file: "standstill.html", roman: "xi", title: "The Standstill",
+    blurb: "The Moon’s reach north and south, swelling from 18 degrees to nearly 29 and back as its tilted orbit turns round, and where it rises at your latitude.",
+    returns: "The Moon’s farthest reach", span: "6,798.38 days", days: 6798.38 },
 ];
 
 // The pages built, and the three the masthead names. Chapters count as
@@ -213,6 +216,12 @@ for (const c of CHAPTERS) {
   const src = readFileSync(join(SRC, "pages", c.file), "utf8");
   if (!src.includes(`<p class="kicker">Chapter ${c.roman}</p>`)) problems.push(`${c.file}: kicker is not "Chapter ${c.roman}"`);
   if (!src.includes(`<h1>${c.title}</h1>`)) problems.push(`${c.file}: h1 is not "${c.title}"`);
+}
+{
+  const WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen"];
+  const want = WORDS[CHAPTERS.length];
+  const src = readFileSync(join(SRC, "pages", "contents.html"), "utf8");
+  if (!want || !src.includes(`<h1>${want} things`) || !src.includes(`The ${want.toLowerCase()} chapters`)) problems.push(`contents.html: chapter count is not "${want}"`);
 }
 for (const f of ["index.html", "contents.html"]) {
   if (readFileSync(join(OUT, f), "utf8").includes("<!--")) problems.push(`${f}: unfilled marker`);
@@ -395,6 +404,31 @@ expect(`${pesachSpan.sort()[0]} ${pesachSpan.at(-1)}`, "03-26 04-25", "Passover 
     if (Math.abs(got - mean) / mean > 0.03) problems.push(`${p} mean retrograde spell: ${got.toFixed(1)} days`);
     if (p === "Mercury" && (Math.abs(Math.min(...d) - 19.85) > 0.25 || Math.abs(Math.max(...d) - 24.19) > 0.25)) problems.push(`Mercury retrograde range: ${Math.min(...d)}–${Math.max(...d)}`);
   }
+}
+
+// The standstill: the mean node's period against Wikipedia's 6,798.383
+// days; the standstill months of 1950-2052 against Wikipedia's list; the
+// Moon's position against Meeus's example 47.a (1992 April 12, 0h TD:
+// longitude 133.162655°, latitude −3.229126°) to 0.01°; and the extremes
+// of the 2025 major and 2015 minor standstills within 0.05° of the
+// published 28.72° and 18.13°.
+{
+  if (Math.abs(C.NODE_PERIOD - 6798.383) > 0.01) problems.push(`node period: ${C.NODE_PERIOD}`);
+  const months = [];
+  for (let d = new Date("1945-01-01T00:00:00Z"); months.length < 12;) {
+    const M = C.nextNodeAt(d, 0), m = C.nextNodeAt(d, 180), first = M < m ? M : m;
+    months.push(first.toISOString().slice(0, 7));
+    d = new Date(first.getTime() + 30 * 86400000);
+  }
+  expect(months.join(" "), "1950-08 1959-12 1969-03 1978-07 1987-11 1997-02 2006-06 2015-10 2025-01 2034-05 2043-09 2052-12", "standstill months");
+  const td = new Date(Date.UTC(1992, 3, 12) - C.deltaT(1992.25) * 1000), p = C.moonPosition(td);
+  if (Math.abs(p.lon - 133.162655) > 0.01 || Math.abs(p.lat + 3.229126) > 0.01) problems.push(`Meeus example 47.a: ${p.lon}, ${p.lat}`);
+  const major = C.moonExtremes(new Date("2024-01-01T00:00:00Z"), new Date("2026-01-01T00:00:00Z"));
+  const top = Math.max(...major.map((e) => Math.abs(e.decl)));
+  if (Math.abs(top - 28.72) > 0.05) problems.push(`major standstill reach: ${top}`);
+  const minor = C.moonExtremes(new Date("2014-10-01T00:00:00Z"), new Date("2016-10-01T00:00:00Z")).filter((e) => e.north);
+  const least = Math.min(...minor.map((e) => e.decl));
+  if (Math.abs(least - 18.13) > 0.05) problems.push(`minor standstill reach: ${least}`);
 }
 
 if (problems.length) {

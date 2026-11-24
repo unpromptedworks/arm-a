@@ -759,3 +759,85 @@ export function retrogrades(p, from, to) {
   }
   return out;
 }
+
+// ---------- The Moon's nodes and declination ----------
+// The mean longitude of the ascending node and the Moon's position from
+// Meeus, Astronomical Algorithms, ch. 47 (eqs. 47.1–47.7), with the
+// fourteen largest terms of the longitude table and the ten largest of
+// the latitude, plus the additive terms. That keeps the position to a
+// few hundredths of a degree, ample for declinations to a tenth. The
+// position is geocentric and ignores nutation (under 20″).
+const jdeOf = (date) => toJD(date) + deltaT(date.getUTCFullYear() + date.getUTCMonth() / 12) / 86400;
+const centuries = (date) => (jdeOf(date) - 2451545) / 36525;
+
+export const moonNode = (date) => {
+  const t = centuries(date);
+  return ((125.0445479 - 1934.1362891 * t + 0.0020754 * t * t) % 360 + 360) % 360;
+};
+// Days for the mean node to go once round, against the equinox.
+export const NODE_PERIOD = 36525 * 360 / 1934.1362891;
+
+// Multipliers of D, M, M′, F and the coefficient in millionths of a degree.
+const MOON_LON = [[0, 0, 1, 0, 6288774], [2, 0, -1, 0, 1274027], [2, 0, 0, 0, 658314], [0, 0, 2, 0, 213618],
+  [0, 1, 0, 0, -185116], [0, 0, 0, 2, -114332], [2, 0, -2, 0, 58793], [2, -1, -1, 0, 57066], [2, 0, 1, 0, 53322],
+  [2, -1, 0, 0, 45758], [0, 1, -1, 0, -40923], [1, 0, 0, 0, -34720], [0, 1, 1, 0, -30383], [2, 0, 0, -2, 15327]];
+const MOON_LAT = [[0, 0, 0, 1, 5128122], [0, 0, 1, 1, 280602], [0, 0, 1, -1, 277693], [2, 0, 0, -1, 173237],
+  [2, 0, -1, 1, 55413], [2, 0, -1, -1, 46271], [2, 0, 0, 1, 32573], [0, 0, 2, 1, 17198], [2, 0, 1, -1, 9266], [0, 0, 2, -1, 8822]];
+
+export function moonPosition(date) {
+  const t = centuries(date);
+  const Lp = 218.3164477 + 481267.88123421 * t - 0.0015786 * t * t;
+  const D = 297.8501921 + 445267.1114034 * t - 0.0018819 * t * t;
+  const M = 357.5291092 + 35999.0502909 * t - 0.0001536 * t * t;
+  const Mp = 134.9633964 + 477198.8675055 * t + 0.0087414 * t * t;
+  const F = 93.2720950 + 483202.0175233 * t - 0.0036539 * t * t;
+  const A1 = 119.75 + 131.849 * t, A2 = 53.09 + 479264.290 * t, A3 = 313.45 + 481266.484 * t;
+  const E = 1 - 0.002516 * t - 0.0000074 * t * t;
+  const s = (deg) => Math.sin(deg * RAD);
+  const sum = (rows) => rows.reduce((acc, [d, m, mp, f, c]) =>
+    acc + c * (Math.abs(m) === 1 ? E : Math.abs(m) === 2 ? E * E : 1) * s(d * D + m * M + mp * Mp + f * F), 0);
+  const sl = sum(MOON_LON) + 3958 * s(A1) + 1962 * s(Lp - F) + 318 * s(A2);
+  const sb = sum(MOON_LAT) - 2235 * s(Lp) + 382 * s(A3) + 175 * s(A1 - F) + 175 * s(A1 + F) + 127 * s(Lp - Mp) - 115 * s(Lp + Mp);
+  const lon = ((Lp + sl / 1e6) % 360 + 360) % 360, lat = sb / 1e6;
+  const eps = (23.4392911 - 0.0130042 * t) * RAD; // mean obliquity, Meeus eq. 22.2
+  const decl = Math.asin(Math.sin(lat * RAD) * Math.cos(eps) + Math.cos(lat * RAD) * Math.sin(eps) * Math.sin(lon * RAD)) / RAD;
+  return { lon, lat, decl };
+}
+
+// The Moon's greatest declinations north and south between two dates,
+// one of each in every tropical month: found on a six-hour grid and
+// refined by golden-section search to about a minute.
+export function moonExtremes(from, to) {
+  const step = 0.25 * DAY_MS, out = [];
+  const dec = (t) => moonPosition(new Date(t)).decl;
+  let a = dec(from.getTime() - step), b = dec(from.getTime());
+  for (let t = from.getTime(); t <= to.getTime(); t += step) {
+    const c = dec(t + step);
+    const north = b > a && b >= c, south = b < a && b <= c;
+    if (north || south) {
+      let lo = t - step, hi = t + step;
+      const g = (x) => (north ? -dec(x) : dec(x));
+      for (let i = 0; i < 30; i++) {
+        const m1 = hi - (hi - lo) * 0.618, m2 = lo + (hi - lo) * 0.618;
+        if (g(m1) < g(m2)) hi = m2; else lo = m1;
+      }
+      const at = (lo + hi) / 2;
+      out.push({ date: new Date(at), decl: dec(at), north });
+    }
+    a = b; b = c;
+  }
+  return out;
+}
+
+// The next moment the mean node reaches `target` degrees of longitude:
+// 0 for a major standstill (the ascending node at the March equinox,
+// where the Moon's tilt adds to the Earth's), 180 for a minor one.
+export function nextNodeAt(date, target) {
+  const behind = (((moonNode(date) - target) % 360) + 360) % 360; // the node runs backwards
+  let t = date.getTime() + (behind / 360) * NODE_PERIOD * DAY_MS;
+  for (let i = 0; i < 3; i++) {
+    const d = ((moonNode(new Date(t)) - target + 540) % 360) - 180;
+    t += (d / 360) * NODE_PERIOD * DAY_MS;
+  }
+  return new Date(t);
+}
