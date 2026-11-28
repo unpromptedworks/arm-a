@@ -1,0 +1,83 @@
+<!--meta {"title": "The Perigee", "description": "Why the Moon is nearer some nights than others: its oval orbit, the perigee that comes round every 27.55 days, the full moon that meets it every 411.78 days, and the turning of the orbit in 8.85 years. With the coming supermoons, worked out live in your browser.", "script": "perigee.js"} -->
+<p class="kicker">Chapter xii</p>
+<h1>The Perigee</h1>
+<p class="lede">The Moon’s orbit is not a circle. Once a month it swings in to its perigee and out to its apogee, fifty thousand kilometres farther off. When the full moon happens to fall at the near point, the papers call it a supermoon. That meeting has its own cycle, a little under fourteen months.</p>
+
+<div class="prose">
+<p class="dropcap">Measured from the Earth’s centre, the Moon comes in as close as about 356,400 km and goes out as far as about 406,700.<sup><a href="#s1">1</a></sup> The time from one perigee to the next, the anomalistic month, is 27.5546 days, a few hours longer than the 27.3217 days the Moon takes to go once round against the stars, because the oval itself is turning. Its long axis, the line of apsides, creeps forward in the direction the Moon travels. The Moon gains one whole orbit on it after 1 ÷ (1/27.3217 − 1/27.5546) = <span id="aps">…</span> days, or <span id="aps-y">…</span> years.<sup><a href="#s1">1</a></sup></p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Now</th><th class="r">Figure</th></tr></thead>
+  <tbody id="now"></tbody>
+</table></div>
+
+<h2>A month in and out</h2>
+<div class="prose">
+<p>The distance comes from the full table of distance terms in Meeus’s lunar theory,<sup><a href="#s2">2</a></sup> 46 of them, good to well under a kilometre. Here it is for the coming fifteen months, with every full moon marked on the curve. Watch the open circles: each falls a little later in the in-and-out swing than the last, and they walk down to a perigee and back up to an apogee.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="swing" viewBox="0 0 720 300" role="img" aria-labelledby="swing-cap"></svg></div>
+  <figcaption id="swing-cap">Working out the distance…</figcaption>
+</figure>
+
+<h2>The full moon cycle</h2>
+<div class="prose">
+<p>A full moon comes every 29.5306 days and a perigee every 27.5546, so after each full moon the perigee is about two days further ahead of it. The two meet again when the perigees have gained one whole lap: after 1 ÷ (1/27.5546 − 1/29.5306) = <span id="fmc">…</span> days. That is fourteen full moons almost exactly, and fifteen perigees.<sup><a href="#s3">3</a></sup> Looked at another way, it is the time the Sun takes to come back to the turning line of apsides: the year against the stars, 365.2564 days, chasing a line that runs ahead once in <span id="aps2">…</span> days, gives 1 ÷ (1/365.2564 − 1/<span id="aps3">…</span>) = <span id="fmc2">…</span> days, the same number, because both are the same pair of motions counted from different ends.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="wave" viewBox="0 0 720 300" role="img" aria-labelledby="wave-cap"></svg></div>
+  <figcaption id="wave-cap">Finding the full moons…</figcaption>
+</figure>
+<div class="prose">
+<p>“Supermoon” is not an astronomer’s word. The astrologer Richard Nolle coined it in 1979 for a new or full moon within 90% of the way to its nearest approach, and there is no agreed definition; by most, three or four full or new moons a year qualify.<sup><a href="#s3">3</a></sup> The plainer question has an exact answer: which full moon in each cycle comes nearest. Here are the next ones.</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Nearest full moon of its cycle</th><th class="r">Distance</th><th class="r">Width</th><th class="r">From perigee</th></tr></thead>
+  <tbody id="next"></tbody>
+</table></div>
+<p class="note">Distances are between the centres of the Earth and the Moon, at the moment of full moon. Width is the Moon’s apparent diameter seen from the Earth’s centre, in minutes of arc. “From perigee” is the time from the nearest perigee to the full moon.</p>
+
+<h2>Near and far are not fixed</h2>
+<div class="prose">
+<p>Not every perigee is equally near. The chart below sets every perigee and apogee from 2000 to 2050 against the Moon’s phase at the time. Perigees at new and full moon are the deepest and those at the quarters the shallowest; apogees at new and full moon are the farthest, though over a much narrower range. So a full moon at perigee is doubly near: it catches the perigee, and the perigee is at its nearest then.</p>
+</div>
+<figure>
+  <div class="table-wrap"><svg class="chart wide" id="scatter" viewBox="0 0 720 360" role="img" aria-labelledby="scatter-cap"></svg></div>
+  <figcaption id="scatter-cap">Finding the perigees and apogees…</figcaption>
+</figure>
+<div class="prose">
+<p id="closest-text">…</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Nearest full moons, 1900–2100</th><th class="r">Distance</th></tr></thead>
+  <tbody id="closest"></tbody>
+</table></div>
+
+<h2>How much bigger</h2>
+<div class="prose">
+<p>The two discs below are drawn to one scale: the nearest full moon and the farthest in the next fifteen years. The difference is real but modest. The width is about a seventh greater, the area and the light it sends about a third greater,<sup><a href="#s3">3</a></sup> and with nothing beside it in the sky to compare, few people could tell the two apart. A Moon low over the horizon looks far larger than either, but that is the Moon illusion, a trick of the eye, not of the orbit.<sup><a href="#s3">3</a></sup></p>
+</div>
+<figure>
+  <svg class="chart" id="discs" viewBox="0 0 720 240" role="img" aria-labelledby="discs-cap"></svg>
+  <figcaption id="discs-cap">Drawing the discs…</figcaption>
+</figure>
+<div class="prose">
+<p>The tides feel it more than the eye does. A nearer Moon pulls a little harder on the oceans, so a new or full moon near perigee adds to the spring tide that the lined-up Sun and Moon raise anyway: the perigean spring tide, or king tide. Over the whole ocean the effect is small, but on some coasts it can be measured, in higher water and in beach erosion.<sup><a href="#s3">3</a></sup></p>
+</div>
+
+<h2>The same distance, a saros later</h2>
+<div class="prose">
+<p>The saros of eclipses (<a href="eclipses.html">chapter iv</a>) is 223 full moons, 223 × 29.5306 = 6,585.32 days. It is also, nearly enough, 239 anomalistic months: 239 × 27.5546 = <span id="s239">…</span> days, <span id="sgap">…</span> hours longer.<sup><a href="#s4">4</a></sup> So after one saros the Moon comes back not only to the same phase and the same node but to almost the same distance, which is why the eclipses of one saros series look so alike.<sup><a href="#s4">4</a></sup> The page’s own figures, for the next eclipses and those one saros before them:</p>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Eclipse</th><th class="r">Moon’s distance</th><th>A saros before</th><th class="r">Distance then</th></tr></thead>
+  <tbody id="saros"></tbody>
+</table></div>
+
+<h2 id="sources">Sources</h2>
+<ol class="note">
+  <li id="s1">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Orbit_of_the_Moon">Orbit of the Moon</a>”: the perigee range of 356,400–370,400 km, the apogee range of 404,000–406,700 km, the anomalistic month of 27.554550 days, and the turn of the line of apsides in 8.85 years (3,232.6054 days). The page’s own perigees and apogees from 2000 to 2100 fall within these ranges, and the build checks it.</li>
+  <li id="s2">Jean Meeus, <em>Astronomical Algorithms</em>, 2nd ed., 1998, ch. 47: the fundamental arguments and the distance terms of table 47.A, checked against the open-source PyMeeus library’s copy of the table. The page reproduces Meeus’s example 47.a, 368,409.7 km for 12 April 1992, and the build checks it. Full moons are from ch. 49, as in chapter i.</li>
+  <li id="s3">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Supermoon">Supermoon</a>”: the origin of the word, its lack of a fixed definition, the cycle of about fourteen full moons, the sizes (about 14% wider, 30% brighter), perigean spring tides, and the closest full moons of 1948, 2016, 2034 and 2052, against which the build checks the page’s list.</li>
+  <li id="s4">Wikipedia, “<a href="https://en.wikipedia.org/wiki/Saros_(astronomy)">Saros (astronomy)</a>”.</li>
+</ol>

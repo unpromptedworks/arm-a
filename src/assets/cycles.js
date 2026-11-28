@@ -841,3 +841,80 @@ export function nextNodeAt(date, target) {
   }
   return new Date(t);
 }
+
+// ---------- The Moon's distance ----------
+// Meeus, Astronomical Algorithms, ch. 47: the distance from the Earth's
+// centre to the Moon's, 385,000.56 km plus the sum of the distance terms
+// of table 47.A (all of them: 46 cosine terms, in metres). Good to well
+// under a kilometre. Rows: multipliers of D, M, M′, F and the coefficient.
+const MOON_R = [[0, 0, 1, 0, -20905355], [2, 0, -1, 0, -3699111], [2, 0, 0, 0, -2955968], [0, 0, 2, 0, -569925],
+  [0, 1, 0, 0, 48888], [0, 0, 0, 2, -3149], [2, 0, -2, 0, 246158], [2, -1, -1, 0, -152138], [2, 0, 1, 0, -170733],
+  [2, -1, 0, 0, -204586], [0, 1, -1, 0, -129620], [1, 0, 0, 0, 108743], [0, 1, 1, 0, 104755], [2, 0, 0, -2, 10321],
+  [0, 0, 1, -2, 79661], [4, 0, -1, 0, -34782], [0, 0, 3, 0, -23210], [4, 0, -2, 0, -21636], [2, 1, -1, 0, 24208],
+  [2, 1, 0, 0, 30824], [1, 0, -1, 0, -8379], [1, 1, 0, 0, -16675], [2, -1, 1, 0, -12831], [2, 0, 2, 0, -10445],
+  [4, 0, 0, 0, -11650], [2, 0, -3, 0, 14403], [0, 1, -2, 0, -7003], [2, -1, -2, 0, 10056], [1, 0, 1, 0, 6322],
+  [2, -2, 0, 0, -9884], [0, 1, 2, 0, 5751], [2, -2, -1, 0, -4950], [2, 0, 1, -2, 4130], [4, -1, -1, 0, -3958],
+  [3, 0, -1, 0, 3258], [2, 1, 1, 0, 2616], [4, -1, -2, 0, -1897], [0, 2, -1, 0, -2117], [2, 2, -1, 0, 2354],
+  [4, 0, 1, 0, -1423], [0, 0, 4, 0, -1117], [4, -1, 0, 0, -1571], [1, 0, -2, 0, -1739], [0, 0, 2, -2, -4421],
+  [0, 2, 1, 0, 1165], [2, 0, -1, -2, 8752]];
+export const MOON_RADIUS = 1737.4; // km, mean
+
+// The distance in km at T Julian centuries of dynamical time from J2000.
+export function moonDistanceT(t) {
+  const D = 297.8501921 + 445267.1114034 * t - 0.0018819 * t * t;
+  const M = 357.5291092 + 35999.0502909 * t - 0.0001536 * t * t;
+  const Mp = 134.9633964 + 477198.8675055 * t + 0.0087414 * t * t;
+  const F = 93.2720950 + 483202.0175233 * t - 0.0036539 * t * t;
+  const E = 1 - 0.002516 * t - 0.0000074 * t * t;
+  let sr = 0;
+  for (const [d, m, mp, f, c] of MOON_R) {
+    sr += c * (Math.abs(m) === 1 ? E : Math.abs(m) === 2 ? E * E : 1) * Math.cos((d * D + m * M + mp * Mp + f * F) * RAD);
+  }
+  return 385000.56 + sr / 1000;
+}
+export const moonDistance = (date) => moonDistanceT(centuries(date));
+// The Moon's apparent diameter from the Earth's centre, in minutes of arc.
+export const moonDiameter = (km) => 2 * Math.asin(MOON_RADIUS / km) / RAD * 60;
+
+// Mean lengths: the line of apsides turns once (against the stars) while
+// the Moon gains one sidereal month on it; the Sun laps it, and full moon
+// meets perigee again, in the "full moon cycle".
+export const APSIDES_PERIOD = 1 / (1 / SIDEREAL_MONTH - 1 / ANOMALISTIC_MONTH);
+export const FULL_MOON_CYCLE = 1 / (1 / ANOMALISTIC_MONTH - 1 / SYNODIC_MONTH);
+
+// Every perigee and apogee between two dates: turning points of the
+// distance on a six-hour grid, refined by golden-section search.
+export function moonApsides(from, to) {
+  const step = 0.25 * DAY_MS, out = [];
+  const r = (t) => moonDistance(new Date(t));
+  let a = r(from.getTime() - step), b = r(from.getTime());
+  for (let t = from.getTime(); t <= to.getTime(); t += step) {
+    const c = r(t + step);
+    const perigee = b < a && b <= c, apogee = b > a && b >= c;
+    if (perigee || apogee) {
+      let lo = t - step, hi = t + step;
+      const g = (x) => (perigee ? r(x) : -r(x));
+      for (let i = 0; i < 30; i++) {
+        const m1 = hi - (hi - lo) * 0.618, m2 = lo + (hi - lo) * 0.618;
+        if (g(m1) < g(m2)) hi = m2; else lo = m1;
+      }
+      const at = (lo + hi) / 2;
+      out.push({ date: new Date(at), km: r(at), perigee });
+    }
+    a = b; b = c;
+  }
+  return out;
+}
+
+// Full moons (or new, with `full` false) between two dates, each with
+// the Moon's distance at that moment.
+export function phasesWithDistance(from, to, full = true) {
+  const out = [];
+  let k = Math.floor((toJD(from) - NEW_MOON_EPOCH) / SYNODIC_MONTH) - 1 + (full ? 0.5 : 0);
+  for (;; k++) {
+    const date = truePhase(k);
+    if (date > to) break;
+    if (date >= from) out.push({ date, km: moonDistance(date), k });
+  }
+  return out;
+}

@@ -47,6 +47,9 @@ const CHAPTERS = [
   { file: "standstill.html", roman: "xi", title: "The Standstill",
     blurb: "The Moon’s reach north and south, swelling from 18 degrees to nearly 29 and back as its tilted orbit turns round, and where it rises at your latitude.",
     returns: "The Moon’s farthest reach", span: "6,798.38 days", days: 6798.38 },
+  { file: "perigee.html", roman: "xii", title: "The Perigee",
+    blurb: "The Moon’s oval orbit, the full moon that meets its near point every 411.78 days, the nearest full moons of two centuries, and the orbit’s turn in 8.85 years.",
+    returns: "The full moon at perigee", span: "411.78 days", days: 411.78 },
 ];
 
 // The pages built, and the three the masthead names. Chapters count as
@@ -297,6 +300,31 @@ expect(C.thirteenths().join(" "), "687 685 685 687 684 688 684", "13ths by weekd
 expect([1582, 1700, 1800, 1900, 2026, 2100].map(C.julianLag).join(" "), "10 11 12 13 13 14", "Julian lag");
 expect(C.weekday(1582, 10, 15), 5, "15 October 1582 weekday");
 expect(C.sameCalendarAfter(2026), 2037, "calendar after 2026");
+
+// The perigee: Meeus's example 47.a (368,409.7 km at JDE 2448724.5); the
+// full moon cycle; the ranges of perigee and apogee 2000-2100 against
+// Wikipedia's "Orbit of the Moon" (356,400-370,400 and 404,000-406,700
+// km, to within 100 km); and Wikipedia's "Supermoon": 14 November 2016
+// the nearest full moon from February 1948 until 25 November 2034, and
+// 6 December 2052 the nearest of the twenty-first century.
+{
+  const r = C.moonDistanceT((2448724.5 - 2451545) / 36525);
+  if (Math.abs(r - 368409.7) > 0.1) problems.push(`Meeus 47.a distance: ${r}`);
+  if (Math.abs(C.FULL_MOON_CYCLE - 411.78) > 0.01) problems.push(`full moon cycle: ${C.FULL_MOON_CYCLE}`);
+  if (Math.abs(C.APSIDES_PERIOD - 3232.6054) > 0.1) problems.push(`apsidal period: ${C.APSIDES_PERIOD}`);
+  const ap = C.moonApsides(new Date(Date.UTC(2000, 0, 1)), new Date(Date.UTC(2100, 0, 1)));
+  const span = (arr) => [Math.min(...arr.map((a) => a.km)), Math.max(...arr.map((a) => a.km))];
+  const [p0, p1] = span(ap.filter((a) => a.perigee)), [a0, a1] = span(ap.filter((a) => !a.perigee));
+  for (const [got, want, what] of [[p0, 356400, "nearest perigee"], [p1, 370400, "farthest perigee"], [a0, 404000, "nearest apogee"], [a1, 406700, "farthest apogee"]]) {
+    if (Math.abs(got - want) > 100) problems.push(`${what} 2000-2100: ${got}`);
+  }
+  const fm = C.phasesWithDistance(new Date(Date.UTC(1940, 0, 1)), new Date(Date.UTC(2101, 0, 1)));
+  const nearest = (a, b) => iso(fm.filter((m) => m.date >= new Date(a) && m.date < new Date(b)).reduce((x, y) => (y.km < x.km ? y : x)).date);
+  expect(nearest("1948-02-01", "2034-11-01"), "2016-11-14", "nearest full moon, 1948-2034");
+  expect(nearest("1940-01-01", "2016-11-01"), "1948-01-26", "nearest full moon before 2016, since 1940");
+  expect(nearest("2016-12-01", "2050-01-01"), "2034-11-25", "nearest full moon after 2016");
+  expect(nearest("2001-01-01", "2101-01-01"), "2052-12-06", "nearest full moon of the 21st century");
+}
 
 // The Hebrew calendar: the molad tohu (Sunday 6 October 3761 BC Julian,
 // 23:11:20 Jerusalem, so 20:50:20 UT on 6 September proleptic
